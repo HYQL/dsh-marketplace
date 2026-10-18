@@ -1,0 +1,62 @@
+# agnes-media bundle patch
+#
+# Registers the plugin into the profile's entry stack. The host half exposes
+# HTTP routes under /agnes-media-studio/api, runs the job queue, and registers
+# agent tools; the client half mounts a sidebar workbench page, a conversation
+# header button, and a shell.overlay drawer.
+#
+# Deliberately does NOT touch conversation.* composer slots: the drawer lives in
+# the frame-wide overlay layer, so the composer and its send button are
+# untouched.
+- insert:
+    - id: agnes-media-studio
+      name: 'agnes-media'
+      config:
+        # --- Site selection: cn (api.agnes-ai.cn) | intl (apihub.agnes-ai.com) ---
+        site: cn
+
+        # --- Credentials (null → AGNES_API_KEY credential / env / .credentials.yaml) ---
+        apiKey: null
+        imageBaseURL: null
+        videoBaseURL: null
+
+        # --- Models ---
+        imageModel: agnes-image-2.5-flash
+        videoModel: agnes-video-2.5-flash
+
+        # --- Defaults ---
+        imageDefaults:
+          size: 1K
+          ratio: '1:1'
+          n: 1
+        videoDefaults:
+          ratio: '16:9'
+          seconds: '5'
+          size: 720P
+
+        # --- Transport ---
+        requestTimeoutMs: 120000
+        pollIntervalMs: 5000
+        pollTimeoutMs: 600000
+        maxRetries: 2
+        retryBackoffMs: 1000
+
+        # --- Output (null downloadDir = URLs only) ---
+        downloadDir: null
+        keepDownloads: 200
+
+        # --- Job store: survives reloads and Host restarts ---
+        storeDir: null
+        maxHistory: 60
+
+        # --- When a session is bound, offer "send to chat" on every result ---
+        autoInsert: true
+
+        # --- Entry toggles -------------------------------------------------
+        # Which of the two entries are registered. The drawer is the in-chat
+        # overlay; the page is the sidebar workbench. Turning one off removes
+        # its slot registration entirely, so no DOM or listener is left behind.
+        # "发送到对话" still works when the drawer is off, because the channel
+        # comes from the (invisible) session-scoped header registration.
+        pageEnabled: true
+        drawerEnabled: true

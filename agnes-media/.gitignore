@@ -1,0 +1,13 @@
+# Build artefacts that are regenerable
+node_modules/
+.tmp-store/
+
+# Local test / scratch output
+agnes_out/
+*.log
+
+# Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

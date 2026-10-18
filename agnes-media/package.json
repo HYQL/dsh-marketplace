@@ -1,0 +1,74 @@
+{
+  "name": "agnes-media",
+  "version": "2.0.0",
+  "description": "Agnes Media Studio — AI 生图/生视频工作台：侧栏页面 + 会话浮层双入口、宿主侧任务队列（刷新/重启不丢、可续跑）、文生图/图生图、文生视频/首尾帧/参考素材/一步流图生视频。",
+  "type": "module",
+  "main": "lib/host.js",
+  "types": "lib/host.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/host.d.ts",
+      "default": "./lib/host.js"
+    },
+    "./client": "./lib/client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "src",
+    "tools",
+    "locale",
+    "icon.svg",
+    "cordis.patch.yml",
+    "README.md",
+    "USAGE.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node tools/verify.mjs && node tools/upload-check.mjs",
+    "test:live": "node tools/live-check.mjs"
+  },
+  "license": "MIT",
+  "author": "Administrator",
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "agnes",
+    "ai-image",
+    "ai-video",
+    "media-studio"
+  ],
+  "dependencies": {
+    "yaml": "^2.5.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": ">=0.1.0-rc.5",
+    "@deepseek-ai/dsh-tools": ">=0.1.0-rc.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "@types/react": "~18.3.1",
+    "esbuild": "^0.24.0",
+    "react": "^18.2.0",
+    "typescript": "^5.6.0",
+    "yaml": "^2.5.0"
+  },  "dsh": {
+    "displayName": "Agnes Media Studio",
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    }
+  }
+}
