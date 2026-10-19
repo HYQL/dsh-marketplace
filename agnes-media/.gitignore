@@ -1,13 +1,19 @@
-# Build artefacts that are regenerable
-node_modules/
-.tmp-store/
+# Dependencies. Anchored with a leading slash: a bare `node_modules/` only
+# matches nested paths when this file sits in a subdirectory of the repository,
+# so it silently fails to ignore the top-level one.
+/node_modules/
 
-# Local test / scratch output
-agnes_out/
-*.log
+# Scratch state written by the verification tools (job store, uploads).
+/.tmp-store/
+/.tmp-uploads/
+*.tmp
 
-# Editor
+# Editor / OS noise.
+.vscode/
+.idea/
 .DS_Store
 Thumbs.db
-.idea/
-.vscode/
+
+# `lib/` is NOT ignored: it is the compiled output the harness loads from disk
+# (`main`/`exports` in package.json point there), and this profile is installed
+# from this directory. `tools/build.mjs` regenerates it from `src/`.

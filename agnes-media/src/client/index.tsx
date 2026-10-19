@@ -26,6 +26,7 @@ import { api } from './api.ts'
 import { EntrySwitches } from './entries.tsx'
 import { getEntryPrefs, setEntryPrefs, subscribeEntryPrefs } from './entry-state.ts'
 import type { EntryPrefs } from './api.ts'
+import { candidateKeys, createSeats, type SlotsLike } from './seats.ts'
 
 declare module '@deepseek-ai/dsh-client-ui-slots' {
   interface LocaleNamespaceMap {
@@ -95,14 +96,6 @@ function subscribeDrawer(listener: () => void): () => void {
 let boundSend: ((text: string) => void) | null = null
 let slotSend: ((text: string) => void) | null = null
 const channelListeners = new Set<() => void>()
-
-/**
- * Whether the drawer entry is enabled (read from the Host's stored preference).
- *
- * Kept in sync with the shared store by `applyEntries`, and read by the header
- * button through `useEntryEnabled` so a toggle re-renders it.
- */
-let drawerVisible = true
 
 function sendToChat(): ((text: string) => void) | null {
   return boundSend ?? slotSend
@@ -284,19 +277,30 @@ function run(ctx: ClientContext): void {
 
   // The drawer's child slot is a secondary source: it can only run while the
   // drawer is rendered, so it merely refreshes the channel while drawing.
+  //
+  // It is mounted through `inject` for the same reason the switches are: the
+  // child slot exists only once its parent cell is registered, and the shell
+  // throws when a slot is registered before anything declared it. Registering
+  // it directly at activation therefore failed at boot and was swallowed by
+  // `apply`'s outer guard — the drawer's channel was never wired at all.
   let offWorkspace: (() => void) | null = null
   const openWorkspace = (): void => {
-    const disposer = slots.register({
-      name: WORKSPACE,
-      id: 'agnes-media-workspace',
-      inject: (sessionId?: string) => {
-        setSlotSend(typeof sessionId === 'string' && sessionId.length > 0
-          ? sendChannelFor(ctx, sessionId)
-          : null)
-        return {}
-      },
-    }, () => null)
-    offWorkspace = typeof disposer === 'function' ? (disposer as () => void) : null
+    try {
+      const child = slots.inject(WORKSPACE, () => slots.register({
+        name: WORKSPACE,
+        id: 'agnes-media-workspace',
+        inject: (sessionId?: string) => {
+          setSlotSend(typeof sessionId === 'string' && sessionId.length > 0
+            ? sendChannelFor(ctx, sessionId)
+            : null)
+          return {}
+        },
+      }, () => null))
+      if (typeof child === 'function') offWorkspace = child as () => void
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[agnes-media] cannot mount the drawer channel:', error)
+    }
   }
   openWorkspace()
 
@@ -322,24 +326,42 @@ function run(ctx: ClientContext): void {
   }
   safeEffect(ctx, () => (typeof offWorkspace === 'function' ? offWorkspace : () => {}), 'agnes-media: workspace slot')
 
-  // 4. The two entry switches on the plugin's detail page.
+  // 4. The two entry switches, on the plugin's own page in the Plugins tab.
   //
-  // `plugins.detail.section` is the seat the Plugins page reserves for a
-  // bundle's own configuration. This is the only place the user asked for the
-  // switches to live, and it writes straight to the Host's preference store.
-  safeEffect(ctx, () => slots.inject('plugins.detail.section', () => slots.register({
-    name: 'plugins.detail.section',
-    id: 'agnes-media-entries',
-    order: 10,
-    label: () => t('entries.title'),
+  // `plugins.bundle.config` is the keyed seat a bundle page reserves for its own
+  // configuration, and the page draws a section for it only when the ledger
+  // holds a cell whose key equals that page's package name. The plugin's own
+  // package is that name: its patch declares a bundle that inserts the plugin
+  // row, and the profile selects it, so `agnes-media` has a real page with the
+  // plugin's icon, description and row.
+  //
+  // Mounting goes through `slots.inject`, not `register` directly. The shell
+  // refuses to register into a slot no parent entry has declared, and the
+  // Plugins page declares this one when it mounts — which is after activation.
+  // `inject` is exactly the "run me when the slot exists" primitive, and the
+  // reference plugin (dsh-workbuddy-connect) mounts its cell the same way. A
+  // direct `register` here threw "slot is not declared", the throw was swallowed,
+  // and the page then drew no configuration section at all: the silent
+  // "重启后开关不见了".
+  const seats = createSeats({
+    slots: slots as unknown as SlotsLike,
+    keys: candidateKeys([]),
     locale: NS,
-  }, () => EntrySwitches({ t }))), 'agnes-media: entry switches')
+    registrant: 'agnes-media',
+    render: (key, props) => EntrySwitches({ t, seat: key, hostProps: props }),
+    log: (line, ...rest) => {
+      // eslint-disable-next-line no-console
+      console.info(`[agnes-media] ${line}`, ...rest)
+    },
+  })
+  seats.mount()
+  safeEffect(ctx, () => () => seats.dispose(), 'agnes-media: entry switches')
 
   /*
    * Reconcile the two entries with the Host's stored state.
    *
-   * Driven by the shared store, not by a poll: a switch in the plugin detail
-   * page publishes synchronously, so the entry appears or disappears in the same
+   * Driven by the shared store, not by a poll: a switch on the plugin's page
+   * publishes synchronously, so the entry appears or disappears in the same
    * tick as the click. (A poll cannot do this — one that stops after the first
    * success never sees a later change, and one that runs forever still adds a
    * full interval of latency.)
@@ -348,7 +370,6 @@ function run(ctx: ClientContext): void {
    * run on every change and at boot.
    */
   const applyEntries = (next: EntryPrefs): void => {
-    drawerVisible = next.drawerEnabled
     if (next.pageEnabled) entries.page.on()
     else entries.page.off()
     if (next.drawerEnabled) entries.drawer.on()
@@ -364,6 +385,21 @@ function run(ctx: ClientContext): void {
   void api.entries()
     .then((next) => setEntryPrefs(next))
     .catch(() => { /* fail-open: everything stays registered */ })
+
+  // Boot diagnostic: the one line support asks for. `holding` is what a bundle
+  // page can draw. It is empty while the Plugins page has not mounted yet, which
+  // is the normal boot state — the cells are placed by the `inject` above as
+  // soon as that page declares the slot.
+  try {
+    const report = seats.report()
+    // eslint-disable-next-line no-console
+    console.info(
+      '[agnes-media] boot ok | entry switches held:', report.holding.join(', ') || '(page not mounted yet)',
+    )
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('[agnes-media] boot diagnostic failed:', error)
+  }
 }
 
 function safeEffect(ctx: ClientContext, callback: () => unknown, label: string): void {

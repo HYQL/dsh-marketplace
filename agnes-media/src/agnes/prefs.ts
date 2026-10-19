@@ -2,9 +2,9 @@
  * Entry-toggle preferences, persisted on the Host.
  *
  * Why not the bundle's `config`: that lives in `cordis.patch.yml`, so changing
- * it means editing YAML and restarting. The user asked for switches in the
- * plugin's detail page, and a detail-page control has to take effect here and
- * now — so the value is stored next to the job store and read on boot.
+ * it means editing YAML and restarting. The user asked for switches in the UI,
+ * and a switch has to take effect here and now — so the value is stored next to
+ * the job store and read on boot.
  *
  * The patch still wins when it says something: `pageEnabled: false` in the
  * patch is an administrator's decision that the UI switch must not override.
@@ -33,19 +33,37 @@ const DEFAULTS: EntryPrefs = { pageEnabled: true, drawerEnabled: true }
 export class PrefStore {
   readonly #path: string
   #value: EntryPrefs = { ...DEFAULTS }
+  /** Reads already in flight; `settled()` awaits them. */
+  #pending: Promise<void> = Promise.resolve()
 
   constructor(dir: string) {
     this.#path = join(dir, 'entries.json')
   }
 
-  async load(): Promise<void> {
-    try {
-      const parsed = JSON.parse(await readFile(this.#path, 'utf8')) as PrefFile
-      if (typeof parsed?.pageEnabled === 'boolean') this.#value.pageEnabled = parsed.pageEnabled
-      if (typeof parsed?.drawerEnabled === 'boolean') this.#value.drawerEnabled = parsed.drawerEnabled
-    } catch {
-      // No file (or unreadable): keep the defaults.
-    }
+  load(): Promise<void> {
+    const read = (async (): Promise<void> => {
+      try {
+        const parsed = JSON.parse(await readFile(this.#path, 'utf8')) as PrefFile
+        if (typeof parsed?.pageEnabled === 'boolean') this.#value.pageEnabled = parsed.pageEnabled
+        if (typeof parsed?.drawerEnabled === 'boolean') this.#value.drawerEnabled = parsed.drawerEnabled
+      } catch {
+        // No file (or unreadable): keep the defaults.
+      }
+    })()
+    this.#pending = read
+    return read
+  }
+
+  /**
+   * Resolve once every read started so far has landed.
+   *
+   * `apply()` cannot await `load()` (activation is synchronous), so the stored
+   * value is not known at the moment the route handler starts serving. The
+   * entries endpoint awaits this first; otherwise the first answer after a
+   * restart is the compiled-in default instead of what the user chose.
+   */
+  async settled(): Promise<void> {
+    await this.#pending
   }
 
   get(): EntryPrefs {
@@ -55,10 +73,12 @@ export class PrefStore {
   /**
    * Merge a patch override into the stored value.
    *
-   * A patch that omits a key leaves the stored preference in force; a patch
-   * that sets it explicitly wins, so an administrator can pin an entry off.
+   * A patch that omits a key (or carries `null`) leaves the stored preference in
+   * force; a patch that sets a boolean wins, so an administrator can pin an
+   * entry. The resolved config always has both keys, so `null` — not "never
+   * pass the object" — is what "the user decides" looks like here.
    */
-  applyPatch(patch: { pageEnabled?: boolean; drawerEnabled?: boolean }): void {
+  applyPatch(patch: { pageEnabled?: boolean | null; drawerEnabled?: boolean | null }): void {
     if (typeof patch.pageEnabled === 'boolean') this.#value.pageEnabled = patch.pageEnabled
     if (typeof patch.drawerEnabled === 'boolean') this.#value.drawerEnabled = patch.drawerEnabled
   }

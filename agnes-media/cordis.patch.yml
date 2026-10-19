@@ -58,5 +58,11 @@
         # its slot registration entirely, so no DOM or listener is left behind.
         # "发送到对话" still works when the drawer is off, because the channel
         # comes from the (invisible) session-scoped header registration.
-        pageEnabled: true
-        drawerEnabled: true
+        #
+        # The user's switches (Plugins page → Agnes Media Studio) write these to
+        # ~/.dsh/agnes-media/entries.json. Anything written HERE is a pin that
+        # overrides those switches, so both stay commented out: an uncommented
+        # `true` would switch the entry back on at every boot and quietly undo
+        # the user's choice. Uncomment with `false` only to forbid an entry.
+        # pageEnabled: false
+        # drawerEnabled: false

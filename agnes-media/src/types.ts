@@ -192,10 +192,15 @@ export interface AgnesConfig {
   readonly storeDir: string | null
   readonly maxHistory: number
   readonly autoInsert: boolean
-  /** Register the `sidebar.panellist` + `main` workbench entry. */
-  readonly pageEnabled: boolean
-  /** Register the conversation-header button and its `shell.overlay` drawer. */
-  readonly drawerEnabled: boolean
+  /**
+   * Register the `sidebar.panellist` + `main` workbench entry.
+   *
+   * `null` when the patch says nothing: the stored preference (written by the
+   * switches) then decides. A boolean is an explicit pin.
+   */
+  readonly pageEnabled: boolean | null
+  /** Same contract for the conversation-header button and its drawer. */
+  readonly drawerEnabled: boolean | null
 }
 
 export interface AgnesApiError {

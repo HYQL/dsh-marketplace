@@ -9,6 +9,9 @@
  */
 
 import type { Context } from '@deepseek-ai/cordis'
+import { readFileSync, readdirSync } from 'node:fs'
+import { join, resolve } from 'node:path'
+import { homedir } from 'node:os'
 import { defineTool } from '@deepseek-ai/dsh-tools'
 import type {
   AgnesConfig,
@@ -117,6 +120,11 @@ function applyInner(ctx: Context, config: unknown = DEFAULT_CONFIG): void {
 
   const credentials = readCredentials(ctx)
   const storeKey = (): string | null => storeDir
+  // The bundle page key is a bundle *package name*, so the browser needs the
+  // list this profile selects. The store lives under the DSH home
+  // (`~/.dsh/agnes-media`), whose `profiles/` directory holds every profile
+  // manifest; the one that lists this plugin is the one in force.
+  const profileDir = resolveProfileDir(storeDir)
 
   let credsPromise: Promise<AgnesCredentials> | null = null
   const getCreds = (): Promise<AgnesCredentials> => {
@@ -525,8 +533,10 @@ function applyInner(ctx: Context, config: unknown = DEFAULT_CONFIG): void {
         keySource: key.source,
         storeDir: storeKey() ?? '',
         version,
-        pageEnabled: prefs?.get().pageEnabled ?? cfg.pageEnabled,
-        drawerEnabled: prefs?.get().drawerEnabled ?? cfg.drawerEnabled,
+        // A pinned value (patch) wins; otherwise the stored preference. `true`
+        // is the shipped default for an entry nothing has decided yet.
+        pageEnabled: cfg.pageEnabled ?? prefs?.get().pageEnabled ?? true,
+        drawerEnabled: cfg.drawerEnabled ?? prefs?.get().drawerEnabled ?? true,
       }
     },
 
@@ -561,9 +571,11 @@ function applyInner(ctx: Context, config: unknown = DEFAULT_CONFIG): void {
 
   ctx.provide?.('agnesMedia', api)
 
-  registerTools(ctx, api, cfg, recordAgentJob)
-  registerHistoryTool(ctx, api)
-  registerBridge(ctx, api, { store, resumeJob, storeDir, prefs })
+  // Each stage stands alone: a failing tool schema must not take the HTTP bridge
+  // (and with it the entry switches) down with it.
+  stage('agent tools', () => registerTools(ctx, api, cfg, recordAgentJob))
+  stage('history tool', () => registerHistoryTool(ctx, api))
+  stage('web-server bridge', () => registerBridge(ctx, api, { store, resumeJob, storeDir, prefs, profileDir }))
 
   ctx.on?.('dispose', () => {
     for (const controller of running.values()) controller.abort()
@@ -578,6 +590,34 @@ function applyInner(ctx: Context, config: unknown = DEFAULT_CONFIG): void {
 function requireStore(store: JobStore | null): JobStore {
   if (store === null) throw new Error('agnes-media: job store unavailable')
   return store
+}
+
+/**
+ * True when a service surface looks usable: a function, an object, a class
+ * instance, or a context proxy. Primitives (and `undefined`) mean the service
+ * did not load, which is how this profile boots — `tools` and `webServer` can
+ * both be missing or primitive-only at the moment the entry applies.
+ */
+function isService(value: unknown): boolean {
+  return (typeof value === 'object' && value !== null) || typeof value === 'function'
+}
+
+/**
+ * Report a broken stage and keep the rest of the plugin alive.
+ *
+ * `apply()` used to wrap the whole body in one try/catch. One throwing stage
+ * then took every later one with it: when the `tools` registrar hit a schema
+ * incompatibility, the job store, the preferences and — crucially — the
+ * web-server bridge were never built, so the panel's switches answered HTTP 404
+ * and the whole page looked dead. Each stage now stands on its own.
+ */
+function stage(label: string, run: () => void): void {
+  try {
+    run()
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(`[agnes-media] ${label} failed; continuing without it:`, error)
+  }
 }
 
 function readCredentials(ctx: Context): CredentialsLike | undefined {
@@ -630,7 +670,11 @@ function registerTools(
   recordAgentJob: RecordAgentJob,
 ): void {
   const tools = (ctx as Context & { tools?: { register?: (t: unknown) => () => void } }).tools
-  if (tools === undefined || typeof tools.register !== 'function') return
+  if (!isService(tools) || typeof (tools as { register?: unknown }).register !== 'function') {
+    // eslint-disable-next-line no-console
+    console.warn('[agnes-media] ctx.tools unavailable; agent tools are not registered')
+    return
+  }
 
   tools.register(defineTool({
     name: 'agnes_media_image',
@@ -639,23 +683,18 @@ function registerTools(
       + 'composition: pass `image` (public HTTPS URLs or data URIs) to edit or compose. '
       + 'Returns image URLs plus any local files.',
     parameters: {
-      type: 'object',
-      properties: {
-        prompt: { type: 'string', description: 'Text instruction for image generation.' },
-        model: { type: 'string', description: `Image model (default ${cfg.imageModel}).` },
-        size: { type: 'string', description: 'Size tier: 1K | 2K | 3K | 4K.' },
-        ratio: { type: 'string', description: 'Aspect ratio: 1:1, 3:4, 4:3, 16:9, 9:16, 2:3, 3:2, 21:9.' },
-        n: { type: 'number', description: 'Number of images (1..4; 2.5-series always returns 1).' },
-        seed: { type: 'number', description: 'Random seed for reproducibility.' },
-        negative_prompt: { type: 'string', description: 'Content to avoid.' },
-        image: {
-          type: 'array',
-          items: { type: 'string' },
-          description: 'Reference images for image-to-image / multi-image composition (max 5).',
-        },
+      prompt: { type: 'string', required: true, description: 'Text instruction for image generation.' },
+      model: { type: 'string', description: `Image model (default ${cfg.imageModel}).` },
+      size: { type: 'string', description: 'Size tier: 1K | 2K | 3K | 4K.' },
+      ratio: { type: 'string', description: 'Aspect ratio: 1:1, 3:4, 4:3, 16:9, 9:16, 2:3, 3:2, 21:9.' },
+      n: { type: 'number', description: 'Number of images (1..4; 2.5-series always returns 1).' },
+      seed: { type: 'number', description: 'Random seed for reproducibility.' },
+      negative_prompt: { type: 'string', description: 'Content to avoid.' },
+      image: {
+        type: 'array',
+        items: { type: 'string' },
+        description: 'Reference images for image-to-image / multi-image composition (max 5).',
       },
-      required: ['prompt'],
-      additionalProperties: false,
     },
     output: {
       schema: { type: 'string' },
@@ -691,33 +730,28 @@ function registerTools(
       + 'addressed in the prompt as <Picture N>/<Audio N>). Use `from_image_prompt` for one-step '
       + 'image-to-video when no public asset URL exists.',
     parameters: {
-      type: 'object',
-      properties: {
-        prompt: { type: 'string', description: 'Text description of the video content.' },
-        model: { type: 'string', description: `Video model (default ${cfg.videoModel}).` },
-        mode: { type: 'string', enum: ['text', 'keyframe', 'reference'], description: 'Generation mode (default text).' },
-        seconds: { type: 'string', description: 'Duration in seconds, 4–12 (default 5).' },
-        aspect_ratio: { type: 'string', description: 'Aspect ratio: 21:9, 16:9, 4:3, 1:1, 3:4, 9:16.' },
-        first_frame: { type: 'string', description: 'keyframe mode: public URL of the first frame.' },
-        last_frame: { type: 'string', description: 'keyframe mode: public URL of the last frame.' },
-        images: {
-          type: 'array', items: { type: 'string' },
-          description: 'reference mode: up to 5 public image URLs.',
-        },
-        audios: {
-          type: 'array', items: { type: 'string' },
-          description: 'reference mode: up to 3 public audio URLs.',
-        },
-        from_image_prompt: {
-          type: 'string',
-          description: 'One-step image-to-video: generate this keyframe image first and use it as first_frame.',
-        },
-        seed: { type: 'number', description: 'Random seed.' },
-        negative_prompt: { type: 'string', description: 'Content to avoid.' },
-        wait: { type: 'boolean', description: 'Block until completion (default true).' },
+      prompt: { type: 'string', required: true, description: 'Text description of the video content.' },
+      model: { type: 'string', description: `Video model (default ${cfg.videoModel}).` },
+      mode: { type: 'string', enum: ['text', 'keyframe', 'reference'], description: 'Generation mode (default text).' },
+      seconds: { type: 'string', description: 'Duration in seconds, 4–12 (default 5).' },
+      aspect_ratio: { type: 'string', description: 'Aspect ratio: 21:9, 16:9, 4:3, 1:1, 3:4, 9:16.' },
+      first_frame: { type: 'string', description: 'keyframe mode: public URL of the first frame.' },
+      last_frame: { type: 'string', description: 'keyframe mode: public URL of the last frame.' },
+      images: {
+        type: 'array', items: { type: 'string' },
+        description: 'reference mode: up to 5 public image URLs.',
       },
-      required: ['prompt'],
-      additionalProperties: false,
+      audios: {
+        type: 'array', items: { type: 'string' },
+        description: 'reference mode: up to 3 public audio URLs.',
+      },
+      from_image_prompt: {
+        type: 'string',
+        description: 'One-step image-to-video: generate this keyframe image first and use it as first_frame.',
+      },
+      seed: { type: 'number', description: 'Random seed.' },
+      negative_prompt: { type: 'string', description: 'Content to avoid.' },
+      wait: { type: 'boolean', description: 'Block until completion (default true).' },
     },
     output: {
       schema: { type: 'string' },
@@ -757,13 +791,8 @@ function registerTools(
     name: 'agnes_media_task',
     description: 'Query the status of an Agnes video task by video id.',
     parameters: {
-      type: 'object',
-      properties: {
-        video_id: { type: 'string', description: 'Video id returned by agnes_media_video.' },
-        model: { type: 'string', description: 'Model used, to pick the right poll contract.' },
-      },
-      required: ['video_id'],
-      additionalProperties: false,
+      video_id: { required: true, type: 'string', description: 'Video id returned by agnes_media_video.' },
+      model: { type: 'string', description: 'Model used, to pick the right poll contract.' },
     },
     output: {
       schema: { type: 'string' },
@@ -782,7 +811,8 @@ function registerTools(
   tools.register(defineTool({
     name: 'agnes_media_models',
     description: 'List image and video models available on the configured Agnes gateway.',
-    parameters: { type: 'object', properties: {}, additionalProperties: false },
+    // No parameters: the model list is whatever the gateway reports.
+    parameters: {},
     output: {
       schema: { type: 'string' },
       render: (_args: Record<string, unknown>, value: unknown) => [{ type: 'text', text: String(value) }],
@@ -816,7 +846,11 @@ function registerTools(
  */
 function registerHistoryTool(ctx: Context, api: AgnesMediaApi): void {
   const tools = (ctx as Context & { tools?: { register?: (t: unknown) => () => void } }).tools
-  if (tools === undefined || typeof tools.register !== 'function') return
+  if (!isService(tools) || typeof (tools as { register?: unknown }).register !== 'function') {
+    // eslint-disable-next-line no-console
+    console.warn('[agnes-media] ctx.tools unavailable; the history tool is not registered')
+    return
+  }
 
   tools.register(defineTool({
     name: 'agnes_media_history',
@@ -825,18 +859,14 @@ function registerHistoryTool(ctx: Context, api: AgnesMediaApi): void {
       + 'Use it to reuse an existing result: read the prompt/model/params, then pass the URL to '
       + 'agnes_media_video as first_frame, or the prompt back into agnes_media_image.',
     parameters: {
-      type: 'object',
-      properties: {
-        limit: { type: 'number', description: 'How many entries to return (default 10, max 50).' },
-        kind: { type: 'string', enum: ['image', 'video'], description: 'Only this media kind.' },
-        source: {
-          type: 'string',
-          enum: ['panel', 'agent'],
-          description: 'Only jobs started from the panel, or only from tool calls.',
-        },
-        promptContains: { type: 'string', description: 'Case-insensitive substring of the prompt.' },
+      limit: { type: 'number', description: 'How many entries to return (default 10, max 50).' },
+      kind: { type: 'string', enum: ['image', 'video'], description: 'Only this media kind.' },
+      source: {
+      type: 'string',
+      enum: ['panel', 'agent'],
+      description: 'Only jobs started from the panel, or only from tool calls.',
       },
-      additionalProperties: false,
+      promptContains: { type: 'string', description: 'Case-insensitive substring of the prompt.' },
     },
     output: {
       schema: { type: 'string' },
@@ -920,37 +950,140 @@ function describeDataUri(uri: string): string {
 // Browser bridge
 // ---------------------------------------------------------------------------
 
-interface RpcResult<T> {
-  readonly ok: boolean
-  readonly value?: T
-  readonly error?: { readonly code: string; readonly message: string }
-}
-
 interface BridgeOptions {
   readonly store: JobStore | null
   readonly resumeJob: (id: string) => JobView | undefined
   readonly storeDir: string | null
   readonly prefs: PrefStore | null
+  /** The profile directory, when known; the bundle list is read from it. */
+  readonly profileDir?: string | undefined
+}
+
+/**
+ * The profile directory that lists this plugin, or undefined.
+ *
+ * Derived from the store directory rather than from a service, because the
+ * profile's path is only reachable through `loader` internals that this plugin
+ * does not inject. `~/.dsh/agnes-media` sits directly under the DSH home, whose
+ * `profiles/<name>/package.json` is the manifest the Plugins page reads.
+ *
+ * A directory is accepted only when its manifest actually depends on this
+ * package (or selects it as a bundle), so an unrelated profile can never
+ * contribute bundle names.
+ */
+function resolveProfileDir(storeDir: string | null): string | undefined {
+  if (typeof storeDir !== 'string' || storeDir.length === 0) return undefined
+  for (const home of [resolve(storeDir, '..', '..'), join(homedir(), '.dsh')]) {
+    const profiles = join(home, 'profiles')
+    let names: string[]
+    try {
+      names = readdirSync(profiles)
+    } catch {
+      continue
+    }
+    for (const name of names) {
+      const dir = join(profiles, name)
+      try {
+        const manifest = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as {
+          dependencies?: Record<string, unknown>
+          dsh?: { profile?: { bundles?: unknown } }
+        }
+        const deps = manifest.dependencies ?? {}
+        const bundles = Array.isArray(manifest.dsh?.profile?.bundles) ? manifest.dsh?.profile?.bundles : []
+        if (Object.hasOwn(deps, 'agnes-media') || bundles.includes('agnes-media')) return dir
+      } catch {
+        // Not a profile directory, or unreadable: try the next one.
+      }
+    }
+  }
+  return undefined
+}
+
+/**
+ * The bundle package names this profile selects.
+ *
+ * `plugins.bundle.config` is keyed by bundle package name, so the browser has
+ * to know which ones exist to put its switches on the right page — and hard-
+ * coding `@local/agnes-media-bundle` is why the section disappeared when the
+ * profile pointed at a different bundle.
+ *
+ * Read from the same manifest the Plugins page reads (`dsh.profile.bundles` in
+ * the profile's `package.json`), plus the plugin's own package name when the
+ * profile lists it as a bundle too. Best-effort: an unreadable manifest yields
+ * an empty list, and the browser keeps its two fallback keys.
+ */
+function selectedBundles(options: BridgeOptions): string[] {
+  const names = new Set<string>()
+  const dir = options.profileDir
+  if (typeof dir === 'string' && dir.length > 0) {
+    try {
+      const raw = readFileSync(join(dir, 'package.json'), 'utf8')
+      const manifest = JSON.parse(raw) as {
+        dsh?: { profile?: { bundles?: unknown } }
+      }
+      const bundles = manifest.dsh?.profile?.bundles
+      if (Array.isArray(bundles)) {
+        for (const name of bundles) if (typeof name === 'string' && name.length > 0) names.add(name)
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.warn('[agnes-media] cannot read the profile bundle list:', error)
+    }
+  }
+  return [...names]
 }
 
 function registerBridge(ctx: Context, api: AgnesMediaApi, options: BridgeOptions): void {
-  // NOTE: this deliberately does NOT use `ctx.inject([...])`.
-  //
-  // `ctx.inject` defers the callback until the named service is provided, and
-  // an entry whose inject never resolves keeps its fiber in the LOADING state
-  // — which the web shell's boot check reports as "<entry>: loading" and then
-  // fails the entire boot (stripping every third-party bundle as recovery).
-  //
-  // `webServer` is a core DSH service that exists long before this plugin's
-  // first HTTP call, so a direct lookup is equivalent and cannot stall.
-  const webServer = (ctx as Context & { webServer?: WebServerLike }).webServer
-  if (webServer === undefined || typeof webServer.register !== 'function') return
+  registerPrefixRoute(ctx, (webServer) => {
+    ctx.effect(() => webServer.register({
+      kind: 'prefix',
+      path: API_PREFIX,
+      handler: (req, res) => void handleHttp(req, res, api, options),
+    }), 'agnes-media: web-server bridge')
+  })
+}
+/**
+ * Mount the plugin's HTTP surface on `ctx.webServer`.
+ *
+ * Registering while the plugin loads is not enough: the web server is built
+ * after the profile's entries, so a load-time check finds `ctx.webServer`
+ * undefined and silently serves nothing — which is exactly how the switches
+ * ended up answering "HTTP 404" and disabled under a running DSH. When it is
+ * missing, this waits for the service (polled, bounded) and mounts then.
+ */
+function registerPrefixRoute(ctx: Context, mount: (webServer: WebServerLike) => void): void {
+  let mounted = false
+  const tryMount = (): boolean => {
+    if (mounted) return true
+    const webServer = (ctx as Context & { webServer?: WebServerLike }).webServer as WebServerLike | undefined
+    if (webServer === undefined || !isService(webServer) || typeof webServer.register !== 'function') return false
+    mounted = true
+    try {
+      mount(webServer)
+      // One line a support transcript can be checked against.
+      // eslint-disable-next-line no-console
+      console.info(`[agnes-media] web-server bridge mounted at ${API_PREFIX}`)
+    } catch (error) {
+      console.error('[agnes-media] mounting the web-server bridge failed:', error)
+    }
+    return true
+  }
 
-  ctx.effect(() => webServer.register({
-    kind: 'prefix',
-    path: API_PREFIX,
-    handler: (req, res) => void handleHttp(req, res, api, options),
-  }), 'agnes-media: web-server bridge')
+  if (tryMount()) return
+
+  let polls = 0
+  const poll = (): void => {
+    if (tryMount()) return
+    polls += 1
+    if (polls >= 60) {
+      console.error('[agnes-media] no ctx.webServer after 30s; the panel cannot reach the Host')
+      return
+    }
+    const timer = setTimeout(poll, 500)
+    ctx.effect(() => () => clearTimeout(timer), 'agnes-media: web-server wait')
+  }
+  const initial = setTimeout(poll, 250)
+  ctx.effect(() => () => clearTimeout(initial), 'agnes-media: web-server retry start')
 }
 
 async function handleHttp(
@@ -1026,6 +1159,9 @@ async function dispatch(
   switch (endpoint) {
     case 'probe':
       return api.probe()
+
+    case 'bundles':
+      return selectedBundles(options)
 
     case 'generateImage':
       return api.generateImage({
@@ -1126,7 +1262,11 @@ async function dispatch(
       return api.jobs.inlineReference(String(p.id ?? ''))
 
     case 'entries':
-      // Read-only here: the plugin detail page writes through `setEntries`.
+      // Read-only here: the sidebar seat writes through `setEntries`.
+      // Wait for the stored file: activation cannot await, so without this the
+      // first answer after a restart is the compiled-in default and the client
+      // would briefly show — and act on — the wrong state.
+      await options.prefs?.settled()
       return options.prefs?.get() ?? { pageEnabled: true, drawerEnabled: true }
 
     case 'setEntries': {

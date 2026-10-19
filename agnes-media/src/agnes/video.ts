@@ -22,14 +22,9 @@
 import type { AgnesConfig, AgnesCredentials, VideoMode, VideoParams, VideoTask, VideoTaskStatus } from '../types.ts'
 import { AgnesHttpError, agnesGet, agnesPost } from './http.ts'
 
-export const VIDEO_ASPECT_RATIOS = ['21:9', '16:9', '4:3', '1:1', '3:4', '9:16'] as const
 export const VIDEO_SECONDS = ['4', '5', '6', '7', '8', '9', '10', '11', '12'] as const
 export const MAX_REFERENCE_IMAGES = 5
 export const MAX_REFERENCE_AUDIOS = 3
-
-export function isVideo25Model(model: string): boolean {
-  return /agnes-video-2\.5/i.test(model)
-}
 
 export function videoCreateEndpoint(creds: AgnesCredentials): string {
   return `${creds.videoBaseUrl.replace(/\/+$/, '')}/v1/videos`

@@ -55,6 +55,14 @@ var api = {
   probe: () => call("probe", {}, "GET"),
   entries: () => call("entries", {}, "GET"),
   setEntries: (patch) => call("setEntries", patch),
+  /**
+   * Bundle package names the profile selects.
+   *
+   * The entry switches are keyed by *bundle* name, so this is how the browser
+   * learns which bundle page it should mount them on without hard-coding one.
+   * Read from the profile manifest on the Host, so it needs no network.
+   */
+  bundles: () => call("bundles", void 0, "GET"),
   jobs: () => call("jobs", void 0, "GET"),
   createImage: (input) => call("createImage", input),
   createVideo: (input) => call("createVideo", input),
@@ -1270,7 +1278,7 @@ var CSS = `
 }
 [data-agnes-root] .ag-drop:focus-visible { outline: 2px solid var(--ag-accent); outline-offset: 1px }
 
-/* ---------- plugin detail page entry switches ---------- */
+/* ---------- entry switches (bundle page section) ---------- */
 [data-agnes-root] .ag-entries { display: flex; flex-direction: column; gap: 4px }
 [data-agnes-root] .ag-entries-title {
   margin: 0 0 6px; font-size: 12px; font-weight: 600;
@@ -1405,7 +1413,8 @@ var en = {
   "entries.page.hint": "A panel beside Plugins and Schedules in the sidebar.",
   "entries.drawer": "In-chat drawer",
   "entries.drawer.hint": "The \u2728 button in a conversation header, opening a side drawer.",
-  "entries.note": 'Changes apply right away. Turning the drawer off keeps "send to chat" working.',
+  "entries.noPage": "The sidebar entry is off \u2014 open the drawer with \u2728 in a conversation header, or turn the switch above back on.",
+  "entries.hostDown": 'The Host bridge is unreachable (the page was loaded before the plugin reloaded \u2014 refresh). Verify with the log line "[agnes-media] web-server bridge mounted".',
   "error.prefix": "Failed",
   "error.noPrompt": "Enter a prompt first.",
   "error.noSession": "No active conversation.",
@@ -1499,7 +1508,8 @@ var zh = {
   "entries.page.hint": "\u4FA7\u680F\u4E2D\u4E0E\u300C\u63D2\u4EF6\u300D\u300C\u5B9A\u65F6\u4EFB\u52A1\u300D\u5E76\u5217\u7684\u9762\u677F\u3002",
   "entries.drawer": "\u4F1A\u8BDD\u5185\u62BD\u5C49",
   "entries.drawer.hint": "\u5BF9\u8BDD\u5934\u90E8\u7684 \u2728 \u6309\u94AE\uFF0C\u70B9\u51FB\u540E\u4ECE\u53F3\u4FA7\u6ED1\u51FA\u3002",
-  "entries.note": "\u4FEE\u6539\u7ACB\u5373\u751F\u6548\u3002\u5173\u95ED\u62BD\u5C49\u4E0D\u5F71\u54CD\u300C\u53D1\u9001\u5230\u5BF9\u8BDD\u300D\u3002",
+  "entries.hostDown": "\u5BBF\u4E3B\u4FA7\u63A5\u53E3\u4E0D\u53EF\u7528\uFF08\u63D2\u4EF6\u91CD\u88C5/\u91CD\u542F\u540E\u9700\u5237\u65B0\u9875\u9762\uFF09\u3002\u5B9A\u4F4D\u6B65\u9AA4\uFF1A\u72B6\u6001\u680F\u7684\u5165\u53E3\u5F00\u5173\u662F\u5426\u6B63\u5E38\uFF0C\u5BBF\u4E3B\u63A7\u5236\u53F0\u662F\u5426\u51FA\u73B0 [agnes-media] web-server bridge mounted\u3002",
+  "entries.noPage": "\u4FA7\u680F\u5165\u53E3\u5DF2\u5173\u95ED\uFF0C\u6240\u4EE5\u8FD9\u4E00\u9875\u53EA\u80FD\u4ECE\u8FD9\u91CC\u6253\u5F00\uFF1A\u5148\u5728\u300C\u5DE5\u4F5C\u53F0\u300D\u5916\u5C42\u6536\u8D77\u89C6\u56FE\uFF08Esc \u6216\u53F3\u4FA7\u300C\u804A\u5929\u300D\uFF09\uFF0C\u518D\u4ECE\u4FA7\u680F\u8FDB\u5165\uFF0C\u6216\u91CD\u65B0\u6253\u5F00\u4E0A\u9762\u7684\u5F00\u5173\u3002",
   "error.prefix": "\u751F\u6210\u5931\u8D25",
   "error.noPrompt": "\u8BF7\u5148\u8F93\u5165\u63D0\u793A\u8BCD\u3002",
   "error.noSession": "\u6CA1\u6709\u6D3B\u52A8\u4F1A\u8BDD\u3002",
@@ -1552,7 +1562,9 @@ function EntrySwitches(props) {
         setError(null);
       }
     }).catch((e) => {
-      if (alive) setError(e instanceof Error ? e.message : String(e));
+      if (!alive) return;
+      if (getEntryPrefs() === null) setEntryPrefs({ pageEnabled: true, drawerEnabled: true });
+      setError(e instanceof Error ? e.message : String(e));
     });
     return () => {
       alive = false;
@@ -1596,8 +1608,8 @@ function EntrySwitches(props) {
         onChange: (next) => void toggle("drawerEnabled", next)
       }
     ),
-    error !== null ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "ag-entries-error", children: error }) : null,
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "ag-entries-note", children: t("entries.note") })
+    error !== null ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "ag-entries-error", children: t("entries.hostDown") }) : null,
+    prefs !== null && !prefs.pageEnabled ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "ag-entries-note", children: t("entries.noPage") }) : null
   ] });
 }
 function Row(props) {
@@ -1622,6 +1634,97 @@ function Row(props) {
       }
     )
   ] });
+}
+
+// src/client/seats.ts
+var OWN_BUNDLE = "agnes-media";
+var ROW_ID = "agnes-media-studio";
+var BUNDLE_KEY = "@local/agnes-media-bundle";
+var BUNDLE_SLOT = "plugins.bundle.config";
+function createSeats(options) {
+  const { slots, keys, locale, registrant, render, log } = options;
+  const disposers = [];
+  const settled = /* @__PURE__ */ new Set();
+  let disposed = false;
+  const occupy = (key) => {
+    try {
+      const seat = slots.register({
+        name: BUNDLE_SLOT,
+        key,
+        locale,
+        registrant
+      }, (props) => render(key, props));
+      settled.add(key);
+      return typeof seat === "function" ? () => {
+        seat();
+      } : () => {
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      if (/already has an entry for key/i.test(message)) {
+        settled.add(key);
+        return () => {
+        };
+      }
+      if (/is not declared/i.test(message)) return null;
+      log?.(`entry switches refused the seat "${key}":`, error);
+      return null;
+    }
+  };
+  const mount = () => {
+    if (disposed) return;
+    for (const key of keys) {
+      try {
+        const dispose = slots.inject(BUNDLE_SLOT, () => {
+          const seat = occupy(key);
+          if (seat !== null) disposers.push(seat);
+          return () => {
+          };
+        });
+        if (typeof dispose === "function") disposers.push(dispose);
+      } catch (error) {
+        log?.(`cannot inject into ${BUNDLE_SLOT} for key "${key}":`, error);
+      }
+    }
+  };
+  const report = () => {
+    let present = /* @__PURE__ */ new Set();
+    try {
+      present = new Set((slots.entries?.(BUNDLE_SLOT) ?? []).map((entry) => entry.options?.key).filter((key) => typeof key === "string"));
+    } catch {
+    }
+    return {
+      holding: keys.filter((key) => present.has(key)),
+      missing: keys.filter((key) => !present.has(key))
+    };
+  };
+  return {
+    mount,
+    report,
+    dispose: () => {
+      disposed = true;
+      for (const dispose of disposers.splice(0).reverse()) {
+        try {
+          dispose();
+        } catch {
+        }
+      }
+      settled.clear();
+    }
+  };
+}
+function candidateKeys(bundles) {
+  const keys = [];
+  const add = (key) => {
+    if (!keys.includes(key)) keys.push(key);
+  };
+  add(OWN_BUNDLE);
+  add(`${OWN_BUNDLE}#${ROW_ID}`);
+  add(BUNDLE_KEY);
+  add(`${BUNDLE_KEY}#${ROW_ID}`);
+  for (const name2 of bundles) add(name2);
+  for (const name2 of bundles) add(`${name2}#${ROW_ID}`);
+  return keys;
 }
 
 // src/client/index.tsx
@@ -1655,7 +1758,6 @@ function subscribeDrawer(listener) {
 var boundSend = null;
 var slotSend = null;
 var channelListeners = /* @__PURE__ */ new Set();
-var drawerVisible = true;
 function sendToChat() {
   return boundSend ?? slotSend;
 }
@@ -1779,15 +1881,19 @@ function run(ctx) {
   }, (props) => DrawerSeat({ t, props })));
   let offWorkspace = null;
   const openWorkspace = () => {
-    const disposer = slots.register({
-      name: WORKSPACE,
-      id: "agnes-media-workspace",
-      inject: (sessionId) => {
-        setSlotSend(typeof sessionId === "string" && sessionId.length > 0 ? sendChannelFor(ctx, sessionId) : null);
-        return {};
-      }
-    }, () => null);
-    offWorkspace = typeof disposer === "function" ? disposer : null;
+    try {
+      const child = slots.inject(WORKSPACE, () => slots.register({
+        name: WORKSPACE,
+        id: "agnes-media-workspace",
+        inject: (sessionId) => {
+          setSlotSend(typeof sessionId === "string" && sessionId.length > 0 ? sendChannelFor(ctx, sessionId) : null);
+          return {};
+        }
+      }, () => null));
+      if (typeof child === "function") offWorkspace = child;
+    } catch (error) {
+      console.error("[agnes-media] cannot mount the drawer channel:", error);
+    }
   };
   openWorkspace();
   entries.drawer = {
@@ -1812,15 +1918,19 @@ function run(ctx) {
   };
   safeEffect(ctx, () => typeof offWorkspace === "function" ? offWorkspace : () => {
   }, "agnes-media: workspace slot");
-  safeEffect(ctx, () => slots.inject("plugins.detail.section", () => slots.register({
-    name: "plugins.detail.section",
-    id: "agnes-media-entries",
-    order: 10,
-    label: () => t("entries.title"),
-    locale: NS
-  }, () => EntrySwitches({ t }))), "agnes-media: entry switches");
+  const seats = createSeats({
+    slots,
+    keys: candidateKeys([]),
+    locale: NS,
+    registrant: "agnes-media",
+    render: (key, props) => EntrySwitches({ t, seat: key, hostProps: props }),
+    log: (line, ...rest) => {
+      console.info(`[agnes-media] ${line}`, ...rest);
+    }
+  });
+  seats.mount();
+  safeEffect(ctx, () => () => seats.dispose(), "agnes-media: entry switches");
   const applyEntries = (next) => {
-    drawerVisible = next.drawerEnabled;
     if (next.pageEnabled) entries.page.on();
     else entries.page.off();
     if (next.drawerEnabled) entries.drawer.on();
@@ -1832,6 +1942,15 @@ function run(ctx) {
   }), "agnes-media: entry sync");
   void api.entries().then((next) => setEntryPrefs(next)).catch(() => {
   });
+  try {
+    const report = seats.report();
+    console.info(
+      "[agnes-media] boot ok | entry switches held:",
+      report.holding.join(", ") || "(page not mounted yet)"
+    );
+  } catch (error) {
+    console.error("[agnes-media] boot diagnostic failed:", error);
+  }
 }
 function safeEffect(ctx, callback, label) {
   const effect = ctx.effect;

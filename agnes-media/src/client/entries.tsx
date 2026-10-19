@@ -1,9 +1,22 @@
 /**
- * The plugin detail page's entry switches.
+ * The two entry switches — the bundle page's configuration section.
  *
- * Rendered into `plugins.detail.section`, which the Plugins page reserves for
- * a bundle's own configuration. Two switches, each wired straight to the Host's
- * preference store, so a change takes effect in the same tick as the click.
+ * Two controls, one per entry point:
+ *
+ *   • **侧栏工作台** — the workbench page beside Plugins. The user's off switch
+ *     for it — and, because the sidebar row is what opens this page, the only
+ *     place it is ever drawn is the page it hides. It must therefore mount and
+ *     toggle even while that entry is removed, which is why the component lives
+ *     on `plugins.bundle.config` (a root seat on the bundle page) rather than
+ *     inside the entry itself.
+ *   • **会话内抽屉** — the ✨ button in a conversation header.
+ *
+ * Each switch is wired straight to the Host's preference store, so a change
+ * takes effect in the same tick as the click, and survives a reload or restart.
+ *
+ * The page renders `view: 'page'` for that seat, so the section draws its own
+ * heading and hands the host nothing to save: there is no draft here, every
+ * click is already persisted.
  *
  * The controls are hand-written rather than imported from a Harness UI package:
  * those packages change without notice and a throwing component would blank the
@@ -19,6 +32,16 @@ import type { Translate } from './studio.tsx'
 
 interface EntrySwitchProps {
   t: Translate
+  /** The bundle page this cell was mounted under, for the support log line. */
+  seat?: string
+  /**
+   * The page's props for this cell (`view`, and for a keyed cell its `form`).
+   *
+   * Accepted and deliberately unused: this section saves every click itself, so
+   * it has no draft to hand back. Naming the props keeps the signature honest
+   * against the slot contract rather than silently ignoring an argument.
+   */
+  hostProps?: unknown
 }
 
 interface RowProps {
@@ -42,7 +65,15 @@ export function EntrySwitches(props: EntrySwitchProps): React.ReactElement {
     let alive = true
     void api.entries()
       .then((value) => { if (alive) { setEntryPrefs(value); setError(null) } })
-      .catch((e: unknown) => { if (alive) setError(e instanceof Error ? e.message : String(e)) })
+      .catch((e: unknown) => {
+        // An unreachable Host must not lock the controls: the switches fall back
+        // to the shipped default (both on) and stay clickable, so the page is
+        // usable the moment the route answers again instead of showing two dead
+        // toggles under an "HTTP 404".
+        if (!alive) return
+        if (getEntryPrefs() === null) setEntryPrefs({ pageEnabled: true, drawerEnabled: true })
+        setError(e instanceof Error ? e.message : String(e))
+      })
     return () => { alive = false }
   }, [])
 
@@ -84,8 +115,10 @@ export function EntrySwitches(props: EntrySwitchProps): React.ReactElement {
         onChange={(next) => void toggle('drawerEnabled', next)}
       />
 
-      {error !== null ? <p className="ag-entries-error">{error}</p> : null}
-      <p className="ag-entries-note">{t('entries.note')}</p>
+      {error !== null ? <p className="ag-entries-error">{t('entries.hostDown')}</p> : null}
+      {prefs !== null && !prefs.pageEnabled
+        ? <p className="ag-entries-note">{t('entries.noPage')}</p>
+        : null}
     </section>
   )
 }

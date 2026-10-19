@@ -62,7 +62,7 @@ export interface CreateVideoInput {
   negative_prompt?: string
 }
 
-/** The two entry toggles the plugin detail page controls. */
+/** The two entry toggles the sidebar footer seat controls. */
 export interface EntryPrefs {
   pageEnabled: boolean
   drawerEnabled: boolean
@@ -72,6 +72,14 @@ export const api = {
   probe: () => call<ProbeInfo>('probe', {}, 'GET'),
   entries: () => call<EntryPrefs>('entries', {}, 'GET'),
   setEntries: (patch: Partial<EntryPrefs>) => call<EntryPrefs>('setEntries', patch),
+  /**
+   * Bundle package names the profile selects.
+   *
+   * The entry switches are keyed by *bundle* name, so this is how the browser
+   * learns which bundle page it should mount them on without hard-coding one.
+   * Read from the profile manifest on the Host, so it needs no network.
+   */
+  bundles: () => call<string[]>('bundles', undefined, 'GET'),
   jobs: () => call<JobView[]>('jobs', undefined, 'GET'),
   createImage: (input: CreateImageInput) => call<JobView>('createImage', input),
   createVideo: (input: CreateVideoInput) => call<JobView>('createVideo', input),

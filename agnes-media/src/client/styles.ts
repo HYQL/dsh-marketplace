@@ -348,7 +348,7 @@ const CSS = `
 }
 [data-agnes-root] .ag-drop:focus-visible { outline: 2px solid var(--ag-accent); outline-offset: 1px }
 
-/* ---------- plugin detail page entry switches ---------- */
+/* ---------- entry switches (bundle page section) ---------- */
 [data-agnes-root] .ag-entries { display: flex; flex-direction: column; gap: 4px }
 [data-agnes-root] .ag-entries-title {
   margin: 0 0 6px; font-size: 12px; font-weight: 600;

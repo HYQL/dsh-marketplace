@@ -25,8 +25,17 @@ export const DEFAULT_CONFIG: AgnesConfig = {
   storeDir: null,
   maxHistory: 60,
   autoInsert: true,
-  pageEnabled: true,
-  drawerEnabled: true,
+  /*
+   * No defaults for the two entry toggles.
+   *
+   * `resolveConfig` always returns a complete object, and the Host feeds it to
+   * `PrefStore.applyPatch`, which treats every boolean it sees as an
+   * administrator's pin. A default of `true` here would therefore pin both
+   * entries on at every boot (and every `probe`) and silently undo what the user
+   * saved. Absent means "the stored preference decides".
+   */
+  pageEnabled: null,
+  drawerEnabled: null,
 }
 
 type Raw = Record<string, unknown>
@@ -92,8 +101,10 @@ export function resolveConfig(input: unknown): AgnesConfig {
     keepDownloads: clampNum(raw.keepDownloads, DEFAULT_CONFIG.keepDownloads, 0, 10_000),
     storeDir: nullableStr(raw.storeDir),
     maxHistory: clampNum(raw.maxHistory, DEFAULT_CONFIG.maxHistory, 0, 500),
-    autoInsert: bool(raw.autoInsert, DEFAULT_CONFIG.autoInsert),
-    pageEnabled: bool(raw.pageEnabled, DEFAULT_CONFIG.pageEnabled),
-    drawerEnabled: bool(raw.drawerEnabled, DEFAULT_CONFIG.drawerEnabled),
+    autoInsert: bool(raw.autoInsert, DEFAULT_CONFIG.autoInsert === true),
+    // A boolean only when the patch (or the user's layer) actually said so;
+    // otherwise null, so the stored preference stays authoritative.
+    pageEnabled: typeof raw.pageEnabled === 'boolean' ? raw.pageEnabled : DEFAULT_CONFIG.pageEnabled,
+    drawerEnabled: typeof raw.drawerEnabled === 'boolean' ? raw.drawerEnabled : DEFAULT_CONFIG.drawerEnabled,
   }
 }

@@ -84,15 +84,18 @@ ok('fastapi {detail} errors surfaced', hostSrc.includes('detail'))
   const off = resolveConfig({ pageEnabled: false, drawerEnabled: false })
   const on = resolveConfig({ pageEnabled: true, drawerEnabled: true })
   const dflt = resolveConfig({})
-  ok('page toggle defaults on', dflt.pageEnabled === true)
-  ok('drawer toggle defaults on', dflt.drawerEnabled === true)
+  // No default: the resolved config is what `applyPatch` receives, and a `true`
+  // there would pin the entries on at every boot and overwrite what the user
+  // saved. Absence has to survive resolution as `null`.
+  ok('page toggle has no config default', dflt.pageEnabled === null)
+  ok('drawer toggle has no config default', dflt.drawerEnabled === null)
   ok('page toggle can be turned off', off.pageEnabled === false)
   ok('drawer toggle can be turned off', off.drawerEnabled === false)
   ok('toggles are independent', on.pageEnabled === true && on.drawerEnabled === true)
 }
 // The toggles come from the preference store, not straight from the config:
-// the detail-page switches write the store, and the patch overrides it.
-ok('probe exposes the toggles', /pageEnabled: prefs\?\.get\(\)\.pageEnabled/.test(hostSrc))
+// the detail-page switches write the store, and a pinned patch value overrides it.
+ok('probe consults the store', /prefs\?\.get\(\)\.pageEnabled/.test(hostSrc))
 ok('patch can still override the store', /prefs\?\.applyPatch\(cfg\)/.test(hostSrc))
 ok('entries endpoint reads the store', hostSrc.includes('options.prefs?.get()'))
 ok('entries endpoint writes the store', hostSrc.includes('options.prefs.set(patch)'))
@@ -228,18 +231,39 @@ if (spec !== undefined) {
 // header slot must be the source that publishes the channel.
 {
   ok('no polling of sessions.list', !clientSrc.includes("getSnapshot?.()") && !/sessions\?\.\s*list/.test(clientSrc))
-  ok('no polling anywhere in the client', !/setInterval\(/.test(clientSrc))
   ok('channel published from a session-scoped slot', /conversation\.session\.header\.utilities[\s\S]{0,400}?inject:\s*\(sessionId/.test(clientSrc))
   ok('header slot resolves a binding', clientSrc.includes('binding?.(sessionId)'))
 }
 
 // ---------------------------------------------------------------------------
-group('plugin detail page switches')
-// The switches live in `plugins.detail.section`, the seat the Plugins page
-// reserves for a bundle's own configuration.
-// esbuild normalises the string quotes, so match either form.
-ok('switches registered in plugins.detail.section',
-  /slots\.inject\(['"]plugins\.detail\.section['"]/.test(clientSrc))
+group('entry switches seat')
+// The switches live in `plugins.bundle.config`, keyed by a bundle package name:
+// the Plugins page renders that seat only on a *bundle* page, and a bundle is
+// what gives this plugin its own detail page.
+// The two earlier homes both failed for the same reason — nothing rendered them:
+//   • `plugins.detail.section` needs a detail page the Plugins page owns;
+//   • `sidebar.footer.action` worked but put a plugin settings control in the
+//     nav rail, away from the plugin's own page.
+//
+// They are mounted through `slots.inject`, because the shell refuses to register
+// into a slot no parent has declared — and the Plugins page declares this one
+// when it mounts, which is after activation. A direct `register` threw, the
+// throw was swallowed, and the page drew no configuration section at all: the
+// silent "重启后开关不见了". `tools/seat-probe.mjs` reproduces that contract.
+ok('switches are mounted on plugins.bundle.config', clientSrc.includes('plugins.bundle.config'))
+ok('switches are keyed by the plugin\'s own bundle page', clientSrc.includes('"agnes-media"'))
+ok('switches also key the companion bundle page', clientSrc.includes('@local/agnes-media-bundle'))
+ok('row configuration is keyed too', clientSrc.includes('agnes-media-studio') && /#\$\{|#\s*\+/.test(clientSrc))
+ok('seats are mounted through slots.inject, not a bare register',
+  /slots\.inject\(BUNDLE_SLOT|inject\(BUNDLE_SLOT/.test(clientSrc) || /slots\.inject\([^)]*,\s*\(\)\s*=>/.test(clientSrc))
+ok('a duplicate key counts as mounted, not as a failure',
+  /already has an entry for key/.test(clientSrc))
+ok('the drawer child slot is mounted through inject too',
+  /slots\.inject\(WORKSPACE/.test(clientSrc))
+ok('switches no longer registered in plugins.detail.section',
+  !/slots\.register\(\s*\{[^}]*['"]plugins\.detail\.section['"]/.test(clientSrc))
+ok('switches no longer registered in sidebar.footer.action',
+  !/slots\.register\(\s*\{[^}]*['"]sidebar\.footer\.action['"]/.test(clientSrc))
 ok('switches use role="switch" with aria-checked', clientSrc.includes('role: "switch"') && clientSrc.includes('aria-checked'))
 ok('switches write through the Host', clientSrc.includes('setEntries'))
 ok('switch thumb colour comes from a token', /--ag-on-accent/.test(clientSrc))
@@ -247,8 +271,8 @@ ok('switch thumb colour comes from a token', /--ag-on-accent/.test(clientSrc))
 // --- toggles must be reversible --------------------------------------------
 // `slots.inject`'s disposer is permanent. If a toggle only ever calls it, the
 // entry can never come back without a reload — which is exactly what a switch in
-// the plugin detail page must not do. Each entry therefore holds an on() that
-// registers afresh.
+// the sidebar must not do. Each entry therefore holds an on() that registers
+// afresh.
 ok('page entry can be re-registered',
   /entries\.page\s*=\s*\{[\s\S]{0,700}?on:\s*\(\)\s*=>\s*\{[\s\S]{0,500}?offSidebarRow\s*=\s*slots\.inject/.test(clientSrc))
 ok('drawer entry can be re-registered',
@@ -259,7 +283,8 @@ ok('toggle-off clears the drawer channel', /setSlotSend\(null\)/.test(clientSrc)
 // A poll cannot do this: one that stops after its first success never sees a
 // later change (the original bug), and one that runs forever still adds a full
 // interval of latency. A shared store publishes synchronously instead.
-ok('no polling of the entry state', !/setInterval\(/.test(clientSrc))
+ok('no polling of the entry state', !/setInterval\([\s\S]{0,120}(api\.)?entries\(/.test(clientSrc))
+ok('no seat backstop timer', !/setInterval\(/.test(clientSrc))
 ok('switches publish to the shared store', /setEntryPrefs\(/.test(clientSrc))
 ok('slots subscribe to the shared store', /subscribeEntryPrefs\(/.test(clientSrc))
 ok('header button re-renders from the store', /function useEntryEnabled/.test(clientSrc))
@@ -579,6 +604,25 @@ if (hostApi !== undefined) {
 }
 
 ok('job store file written', existsSync(join(root, '.tmp-store', 'jobs.json')))
+
+// --- the load/add race ------------------------------------------------------
+// `apply` cannot await `load()` (activation is synchronous), so it starts the
+// read and carries on. A job created before that read lands used to be wiped
+// when the read reassigned the list: `createImage` returned a job, and a few
+// milliseconds later the store no longer knew it — so `wait()` answered
+// `undefined` and the panel showed a job that never existed.
+try {
+  const { JobStore } = await import(pathToFileURL(join(root, 'src', 'agnes', 'jobs.ts')).href)
+  const raceDir = join(root, '.tmp-store', 'race')
+  const store = new JobStore(raceDir, 5)
+  void store.load()
+  const job = store.add('image', 'raced', 'm', {}, 'panel')
+  await store.settled()
+  ok('a job added during load survives the load', store.get(job.id) !== undefined)
+  ok('the store still lists it once loaded', store.list().some((entry) => entry.id === job.id))
+} catch (e) {
+  ok('a job added during load survives the load', false, e.message)
+}
 
 globalThis.fetch = realFetch
 delete process.env.AGNES_API_KEY

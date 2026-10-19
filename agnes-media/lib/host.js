@@ -33,9 +33,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
-// node_modules/yaml/dist/nodes/identity.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/identity.js
 var require_identity = __commonJS({
-  "node_modules/yaml/dist/nodes/identity.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/identity.js"(exports) {
     "use strict";
     var ALIAS = Symbol.for("yaml.alias");
     var DOC = Symbol.for("yaml.document");
@@ -90,9 +90,9 @@ var require_identity = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/visit.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/visit.js
 var require_visit = __commonJS({
-  "node_modules/yaml/dist/visit.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/visit.js"(exports) {
     "use strict";
     var identity = require_identity();
     var BREAK = Symbol("break visit");
@@ -248,9 +248,9 @@ var require_visit = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/doc/directives.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/doc/directives.js
 var require_directives = __commonJS({
-  "node_modules/yaml/dist/doc/directives.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/doc/directives.js"(exports) {
     "use strict";
     var identity = require_identity();
     var visit = require_visit();
@@ -419,9 +419,9 @@ var require_directives = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/doc/anchors.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/doc/anchors.js
 var require_anchors = __commonJS({
-  "node_modules/yaml/dist/doc/anchors.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/doc/anchors.js"(exports) {
     "use strict";
     var identity = require_identity();
     var visit = require_visit();
@@ -489,9 +489,9 @@ var require_anchors = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/doc/applyReviver.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/doc/applyReviver.js
 var require_applyReviver = __commonJS({
-  "node_modules/yaml/dist/doc/applyReviver.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/doc/applyReviver.js"(exports) {
     "use strict";
     function applyReviver(reviver, obj2, key, val) {
       if (val && typeof val === "object") {
@@ -539,9 +539,9 @@ var require_applyReviver = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/nodes/toJS.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/toJS.js
 var require_toJS = __commonJS({
-  "node_modules/yaml/dist/nodes/toJS.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/toJS.js"(exports) {
     "use strict";
     var identity = require_identity();
     function toJS(value, arg, ctx) {
@@ -569,9 +569,9 @@ var require_toJS = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/nodes/Node.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/Node.js
 var require_Node = __commonJS({
-  "node_modules/yaml/dist/nodes/Node.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/Node.js"(exports) {
     "use strict";
     var applyReviver = require_applyReviver();
     var identity = require_identity();
@@ -610,9 +610,9 @@ var require_Node = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/nodes/Alias.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/Alias.js
 var require_Alias = __commonJS({
-  "node_modules/yaml/dist/nodes/Alias.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/Alias.js"(exports) {
     "use strict";
     var anchors = require_anchors();
     var visit = require_visit();
@@ -728,9 +728,9 @@ var require_Alias = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/nodes/Scalar.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/Scalar.js
 var require_Scalar = __commonJS({
-  "node_modules/yaml/dist/nodes/Scalar.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/Scalar.js"(exports) {
     "use strict";
     var identity = require_identity();
     var Node = require_Node();
@@ -758,9 +758,9 @@ var require_Scalar = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/doc/createNode.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/doc/createNode.js
 var require_createNode = __commonJS({
-  "node_modules/yaml/dist/doc/createNode.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/doc/createNode.js"(exports) {
     "use strict";
     var Alias = require_Alias();
     var identity = require_identity();
@@ -833,9 +833,9 @@ var require_createNode = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/nodes/Collection.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/Collection.js
 var require_Collection = __commonJS({
-  "node_modules/yaml/dist/nodes/Collection.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/Collection.js"(exports) {
     "use strict";
     var createNode = require_createNode();
     var identity = require_identity();
@@ -976,9 +976,9 @@ var require_Collection = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/stringify/stringifyComment.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/stringify/stringifyComment.js
 var require_stringifyComment = __commonJS({
-  "node_modules/yaml/dist/stringify/stringifyComment.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/stringify/stringifyComment.js"(exports) {
     "use strict";
     var stringifyComment = (str2) => str2.replace(/^(?!$)(?: $)?/gm, "#");
     function indentComment(comment, indent) {
@@ -993,9 +993,9 @@ var require_stringifyComment = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/stringify/foldFlowLines.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/stringify/foldFlowLines.js
 var require_foldFlowLines = __commonJS({
-  "node_modules/yaml/dist/stringify/foldFlowLines.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/stringify/foldFlowLines.js"(exports) {
     "use strict";
     var FOLD_FLOW = "flow";
     var FOLD_BLOCK = "block";
@@ -1129,9 +1129,9 @@ ${indent}${text.slice(fold + 1, end2)}`;
   }
 });
 
-// node_modules/yaml/dist/stringify/stringifyString.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/stringify/stringifyString.js
 var require_stringifyString = __commonJS({
-  "node_modules/yaml/dist/stringify/stringifyString.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/stringify/stringifyString.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
     var foldFlowLines = require_foldFlowLines();
@@ -1412,9 +1412,9 @@ ${indent}`);
   }
 });
 
-// node_modules/yaml/dist/stringify/stringify.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/stringify/stringify.js
 var require_stringify = __commonJS({
-  "node_modules/yaml/dist/stringify/stringify.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/stringify/stringify.js"(exports) {
     "use strict";
     var anchors = require_anchors();
     var identity = require_identity();
@@ -1536,9 +1536,9 @@ ${ctx.indent}${str2}`;
   }
 });
 
-// node_modules/yaml/dist/stringify/stringifyPair.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/stringify/stringifyPair.js
 var require_stringifyPair = __commonJS({
-  "node_modules/yaml/dist/stringify/stringifyPair.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/stringify/stringifyPair.js"(exports) {
     "use strict";
     var identity = require_identity();
     var Scalar = require_Scalar();
@@ -1669,9 +1669,9 @@ ${ctx.indent}`;
   }
 });
 
-// node_modules/yaml/dist/log.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/log.js
 var require_log = __commonJS({
-  "node_modules/yaml/dist/log.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/log.js"(exports) {
     "use strict";
     var node_process = __require("process");
     function debug(logLevel, ...messages) {
@@ -1691,9 +1691,9 @@ var require_log = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/yaml-1.1/merge.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/merge.js
 var require_merge = __commonJS({
-  "node_modules/yaml/dist/schema/yaml-1.1/merge.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/merge.js"(exports) {
     "use strict";
     var identity = require_identity();
     var Scalar = require_Scalar();
@@ -1751,9 +1751,9 @@ var require_merge = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/nodes/addPairToJSMap.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/addPairToJSMap.js
 var require_addPairToJSMap = __commonJS({
-  "node_modules/yaml/dist/nodes/addPairToJSMap.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/addPairToJSMap.js"(exports) {
     "use strict";
     var log = require_log();
     var merge = require_merge();
@@ -1815,9 +1815,9 @@ var require_addPairToJSMap = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/nodes/Pair.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/Pair.js
 var require_Pair = __commonJS({
-  "node_modules/yaml/dist/nodes/Pair.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/Pair.js"(exports) {
     "use strict";
     var createNode = require_createNode();
     var stringifyPair = require_stringifyPair();
@@ -1855,9 +1855,9 @@ var require_Pair = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/stringify/stringifyCollection.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/stringify/stringifyCollection.js
 var require_stringifyCollection = __commonJS({
-  "node_modules/yaml/dist/stringify/stringifyCollection.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/stringify/stringifyCollection.js"(exports) {
     "use strict";
     var identity = require_identity();
     var stringify = require_stringify();
@@ -2006,9 +2006,9 @@ ${indent}${end}`;
   }
 });
 
-// node_modules/yaml/dist/nodes/YAMLMap.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/YAMLMap.js
 var require_YAMLMap = __commonJS({
-  "node_modules/yaml/dist/nodes/YAMLMap.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/YAMLMap.js"(exports) {
     "use strict";
     var stringifyCollection = require_stringifyCollection();
     var addPairToJSMap = require_addPairToJSMap();
@@ -2150,9 +2150,9 @@ var require_YAMLMap = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/common/map.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/common/map.js
 var require_map = __commonJS({
-  "node_modules/yaml/dist/schema/common/map.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/common/map.js"(exports) {
     "use strict";
     var identity = require_identity();
     var YAMLMap = require_YAMLMap();
@@ -2172,9 +2172,9 @@ var require_map = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/nodes/YAMLSeq.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/YAMLSeq.js
 var require_YAMLSeq = __commonJS({
-  "node_modules/yaml/dist/nodes/YAMLSeq.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/nodes/YAMLSeq.js"(exports) {
     "use strict";
     var createNode = require_createNode();
     var stringifyCollection = require_stringifyCollection();
@@ -2288,9 +2288,9 @@ var require_YAMLSeq = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/common/seq.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/common/seq.js
 var require_seq = __commonJS({
-  "node_modules/yaml/dist/schema/common/seq.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/common/seq.js"(exports) {
     "use strict";
     var identity = require_identity();
     var YAMLSeq = require_YAMLSeq();
@@ -2310,9 +2310,9 @@ var require_seq = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/common/string.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/common/string.js
 var require_string = __commonJS({
-  "node_modules/yaml/dist/schema/common/string.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/common/string.js"(exports) {
     "use strict";
     var stringifyString = require_stringifyString();
     var string = {
@@ -2329,9 +2329,9 @@ var require_string = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/common/null.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/common/null.js
 var require_null = __commonJS({
-  "node_modules/yaml/dist/schema/common/null.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/common/null.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
     var nullTag = {
@@ -2347,9 +2347,9 @@ var require_null = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/core/bool.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/core/bool.js
 var require_bool = __commonJS({
-  "node_modules/yaml/dist/schema/core/bool.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/core/bool.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
     var boolTag = {
@@ -2371,9 +2371,9 @@ var require_bool = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/stringify/stringifyNumber.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/stringify/stringifyNumber.js
 var require_stringifyNumber = __commonJS({
-  "node_modules/yaml/dist/stringify/stringifyNumber.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/stringify/stringifyNumber.js"(exports) {
     "use strict";
     function stringifyNumber({ format, minFractionDigits, tag, value }) {
       if (typeof value === "bigint")
@@ -2398,9 +2398,9 @@ var require_stringifyNumber = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/core/float.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/core/float.js
 var require_float = __commonJS({
-  "node_modules/yaml/dist/schema/core/float.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/core/float.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
     var stringifyNumber = require_stringifyNumber();
@@ -2444,9 +2444,9 @@ var require_float = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/core/int.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/core/int.js
 var require_int = __commonJS({
-  "node_modules/yaml/dist/schema/core/int.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/core/int.js"(exports) {
     "use strict";
     var stringifyNumber = require_stringifyNumber();
     var intIdentify = (value) => typeof value === "bigint" || Number.isInteger(value);
@@ -2489,9 +2489,9 @@ var require_int = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/core/schema.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/core/schema.js
 var require_schema = __commonJS({
-  "node_modules/yaml/dist/schema/core/schema.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/core/schema.js"(exports) {
     "use strict";
     var map = require_map();
     var _null = require_null();
@@ -2517,9 +2517,9 @@ var require_schema = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/json/schema.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/json/schema.js
 var require_schema2 = __commonJS({
-  "node_modules/yaml/dist/schema/json/schema.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/json/schema.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
     var map = require_map();
@@ -2584,9 +2584,9 @@ var require_schema2 = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/yaml-1.1/binary.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/binary.js
 var require_binary = __commonJS({
-  "node_modules/yaml/dist/schema/yaml-1.1/binary.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/binary.js"(exports) {
     "use strict";
     var node_buffer = __require("buffer");
     var Scalar = require_Scalar();
@@ -2650,9 +2650,9 @@ var require_binary = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/yaml-1.1/pairs.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/pairs.js
 var require_pairs = __commonJS({
-  "node_modules/yaml/dist/schema/yaml-1.1/pairs.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/pairs.js"(exports) {
     "use strict";
     var identity = require_identity();
     var Pair = require_Pair();
@@ -2728,9 +2728,9 @@ ${cn.comment}` : item.comment;
   }
 });
 
-// node_modules/yaml/dist/schema/yaml-1.1/omap.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/omap.js
 var require_omap = __commonJS({
-  "node_modules/yaml/dist/schema/yaml-1.1/omap.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/omap.js"(exports) {
     "use strict";
     var identity = require_identity();
     var toJS = require_toJS();
@@ -2806,9 +2806,9 @@ var require_omap = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/yaml-1.1/bool.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/bool.js
 var require_bool2 = __commonJS({
-  "node_modules/yaml/dist/schema/yaml-1.1/bool.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/bool.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
     function boolStringify({ value, source }, ctx) {
@@ -2838,9 +2838,9 @@ var require_bool2 = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/yaml-1.1/float.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/float.js
 var require_float2 = __commonJS({
-  "node_modules/yaml/dist/schema/yaml-1.1/float.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/float.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
     var stringifyNumber = require_stringifyNumber();
@@ -2887,9 +2887,9 @@ var require_float2 = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/yaml-1.1/int.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/int.js
 var require_int2 = __commonJS({
-  "node_modules/yaml/dist/schema/yaml-1.1/int.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/int.js"(exports) {
     "use strict";
     var stringifyNumber = require_stringifyNumber();
     var intIdentify = (value) => typeof value === "bigint" || Number.isInteger(value);
@@ -2966,9 +2966,9 @@ var require_int2 = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/yaml-1.1/set.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/set.js
 var require_set = __commonJS({
-  "node_modules/yaml/dist/schema/yaml-1.1/set.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/set.js"(exports) {
     "use strict";
     var identity = require_identity();
     var Pair = require_Pair();
@@ -3055,9 +3055,9 @@ var require_set = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/yaml-1.1/timestamp.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/timestamp.js
 var require_timestamp = __commonJS({
-  "node_modules/yaml/dist/schema/yaml-1.1/timestamp.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/timestamp.js"(exports) {
     "use strict";
     var stringifyNumber = require_stringifyNumber();
     function parseSexagesimal(str2, asBigInt) {
@@ -3143,9 +3143,9 @@ var require_timestamp = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/yaml-1.1/schema.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/schema.js
 var require_schema3 = __commonJS({
-  "node_modules/yaml/dist/schema/yaml-1.1/schema.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/yaml-1.1/schema.js"(exports) {
     "use strict";
     var map = require_map();
     var _null = require_null();
@@ -3187,9 +3187,9 @@ var require_schema3 = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/tags.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/tags.js
 var require_tags = __commonJS({
-  "node_modules/yaml/dist/schema/tags.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/tags.js"(exports) {
     "use strict";
     var map = require_map();
     var _null = require_null();
@@ -3281,9 +3281,9 @@ var require_tags = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/schema/Schema.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/Schema.js
 var require_Schema = __commonJS({
-  "node_modules/yaml/dist/schema/Schema.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/schema/Schema.js"(exports) {
     "use strict";
     var identity = require_identity();
     var map = require_map();
@@ -3313,9 +3313,9 @@ var require_Schema = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/stringify/stringifyDocument.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/stringify/stringifyDocument.js
 var require_stringifyDocument = __commonJS({
-  "node_modules/yaml/dist/stringify/stringifyDocument.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/stringify/stringifyDocument.js"(exports) {
     "use strict";
     var identity = require_identity();
     var stringify = require_stringify();
@@ -3393,9 +3393,9 @@ var require_stringifyDocument = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/doc/Document.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/doc/Document.js
 var require_Document = __commonJS({
-  "node_modules/yaml/dist/doc/Document.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/doc/Document.js"(exports) {
     "use strict";
     var Alias = require_Alias();
     var Collection = require_Collection();
@@ -3702,9 +3702,9 @@ var require_Document = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/errors.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/errors.js
 var require_errors = __commonJS({
-  "node_modules/yaml/dist/errors.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/errors.js"(exports) {
     "use strict";
     var YAMLError = class extends Error {
       constructor(name2, pos, code, message) {
@@ -3767,9 +3767,9 @@ ${pointer}
   }
 });
 
-// node_modules/yaml/dist/compose/resolve-props.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/resolve-props.js
 var require_resolve_props = __commonJS({
-  "node_modules/yaml/dist/compose/resolve-props.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/resolve-props.js"(exports) {
     "use strict";
     function resolveProps(tokens, { flow, indicator, next, offset, onError, parentIndent, startOnNewline }) {
       let spaceBefore = false;
@@ -3901,9 +3901,9 @@ var require_resolve_props = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/compose/util-contains-newline.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/util-contains-newline.js
 var require_util_contains_newline = __commonJS({
-  "node_modules/yaml/dist/compose/util-contains-newline.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/util-contains-newline.js"(exports) {
     "use strict";
     function containsNewline(key) {
       if (!key)
@@ -3943,9 +3943,9 @@ var require_util_contains_newline = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/compose/util-flow-indent-check.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/util-flow-indent-check.js
 var require_util_flow_indent_check = __commonJS({
-  "node_modules/yaml/dist/compose/util-flow-indent-check.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/util-flow-indent-check.js"(exports) {
     "use strict";
     var utilContainsNewline = require_util_contains_newline();
     function flowIndentCheck(indent, fc, onError) {
@@ -3961,9 +3961,9 @@ var require_util_flow_indent_check = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/compose/util-map-includes.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/util-map-includes.js
 var require_util_map_includes = __commonJS({
-  "node_modules/yaml/dist/compose/util-map-includes.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/util-map-includes.js"(exports) {
     "use strict";
     var identity = require_identity();
     function mapIncludes(ctx, items, search) {
@@ -3977,9 +3977,9 @@ var require_util_map_includes = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/compose/resolve-block-map.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/resolve-block-map.js
 var require_resolve_block_map = __commonJS({
-  "node_modules/yaml/dist/compose/resolve-block-map.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/resolve-block-map.js"(exports) {
     "use strict";
     var Pair = require_Pair();
     var YAMLMap = require_YAMLMap();
@@ -4085,9 +4085,9 @@ var require_resolve_block_map = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/compose/resolve-block-seq.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/resolve-block-seq.js
 var require_resolve_block_seq = __commonJS({
-  "node_modules/yaml/dist/compose/resolve-block-seq.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/resolve-block-seq.js"(exports) {
     "use strict";
     var YAMLSeq = require_YAMLSeq();
     var resolveProps = require_resolve_props();
@@ -4136,9 +4136,9 @@ var require_resolve_block_seq = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/compose/resolve-end.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/resolve-end.js
 var require_resolve_end = __commonJS({
-  "node_modules/yaml/dist/compose/resolve-end.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/resolve-end.js"(exports) {
     "use strict";
     function resolveEnd(end, offset, reqSpace, onError) {
       let comment = "";
@@ -4179,9 +4179,9 @@ var require_resolve_end = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/compose/resolve-flow-collection.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/resolve-flow-collection.js
 var require_resolve_flow_collection = __commonJS({
-  "node_modules/yaml/dist/compose/resolve-flow-collection.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/resolve-flow-collection.js"(exports) {
     "use strict";
     var identity = require_identity();
     var Pair = require_Pair();
@@ -4373,9 +4373,9 @@ var require_resolve_flow_collection = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/compose/compose-collection.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/compose-collection.js
 var require_compose_collection = __commonJS({
-  "node_modules/yaml/dist/compose/compose-collection.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/compose-collection.js"(exports) {
     "use strict";
     var identity = require_identity();
     var Scalar = require_Scalar();
@@ -4438,9 +4438,9 @@ var require_compose_collection = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/compose/resolve-block-scalar.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/resolve-block-scalar.js
 var require_resolve_block_scalar = __commonJS({
-  "node_modules/yaml/dist/compose/resolve-block-scalar.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/resolve-block-scalar.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
     function resolveBlockScalar(ctx, scalar, onError) {
@@ -4621,9 +4621,9 @@ var require_resolve_block_scalar = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/compose/resolve-flow-scalar.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/resolve-flow-scalar.js
 var require_resolve_flow_scalar = __commonJS({
-  "node_modules/yaml/dist/compose/resolve-flow-scalar.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/resolve-flow-scalar.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
     var resolveEnd = require_resolve_end();
@@ -4842,9 +4842,9 @@ var require_resolve_flow_scalar = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/compose/compose-scalar.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/compose-scalar.js
 var require_compose_scalar = __commonJS({
-  "node_modules/yaml/dist/compose/compose-scalar.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/compose-scalar.js"(exports) {
     "use strict";
     var identity = require_identity();
     var Scalar = require_Scalar();
@@ -4923,9 +4923,9 @@ var require_compose_scalar = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/compose/util-empty-scalar-position.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/util-empty-scalar-position.js
 var require_util_empty_scalar_position = __commonJS({
-  "node_modules/yaml/dist/compose/util-empty-scalar-position.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/util-empty-scalar-position.js"(exports) {
     "use strict";
     function emptyScalarPosition(offset, before, pos) {
       if (before) {
@@ -4953,9 +4953,9 @@ var require_util_empty_scalar_position = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/compose/compose-node.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/compose-node.js
 var require_compose_node = __commonJS({
-  "node_modules/yaml/dist/compose/compose-node.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/compose-node.js"(exports) {
     "use strict";
     var Alias = require_Alias();
     var identity = require_identity();
@@ -5059,9 +5059,9 @@ var require_compose_node = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/compose/compose-doc.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/compose-doc.js
 var require_compose_doc = __commonJS({
-  "node_modules/yaml/dist/compose/compose-doc.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/compose-doc.js"(exports) {
     "use strict";
     var Document = require_Document();
     var composeNode = require_compose_node();
@@ -5102,9 +5102,9 @@ var require_compose_doc = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/compose/composer.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/composer.js
 var require_composer = __commonJS({
-  "node_modules/yaml/dist/compose/composer.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/compose/composer.js"(exports) {
     "use strict";
     var node_process = __require("process");
     var directives = require_directives();
@@ -5310,9 +5310,9 @@ ${end.comment}` : end.comment;
   }
 });
 
-// node_modules/yaml/dist/parse/cst-scalar.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/parse/cst-scalar.js
 var require_cst_scalar = __commonJS({
-  "node_modules/yaml/dist/parse/cst-scalar.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/parse/cst-scalar.js"(exports) {
     "use strict";
     var resolveBlockScalar = require_resolve_block_scalar();
     var resolveFlowScalar = require_resolve_flow_scalar();
@@ -5495,9 +5495,9 @@ var require_cst_scalar = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/parse/cst-stringify.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/parse/cst-stringify.js
 var require_cst_stringify = __commonJS({
-  "node_modules/yaml/dist/parse/cst-stringify.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/parse/cst-stringify.js"(exports) {
     "use strict";
     var stringify = (cst) => "type" in cst ? stringifyToken(cst) : stringifyItem(cst);
     function stringifyToken(token) {
@@ -5556,9 +5556,9 @@ var require_cst_stringify = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/parse/cst-visit.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/parse/cst-visit.js
 var require_cst_visit = __commonJS({
-  "node_modules/yaml/dist/parse/cst-visit.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/parse/cst-visit.js"(exports) {
     "use strict";
     var BREAK = Symbol("break visit");
     var SKIP = Symbol("skip children");
@@ -5618,9 +5618,9 @@ var require_cst_visit = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/parse/cst.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/parse/cst.js
 var require_cst = __commonJS({
-  "node_modules/yaml/dist/parse/cst.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/parse/cst.js"(exports) {
     "use strict";
     var cstScalar = require_cst_scalar();
     var cstStringify = require_cst_stringify();
@@ -5720,9 +5720,9 @@ var require_cst = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/parse/lexer.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/parse/lexer.js
 var require_lexer = __commonJS({
-  "node_modules/yaml/dist/parse/lexer.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/parse/lexer.js"(exports) {
     "use strict";
     var cst = require_cst();
     function isEmpty(ch) {
@@ -6309,9 +6309,9 @@ var require_lexer = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/parse/line-counter.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/parse/line-counter.js
 var require_line_counter = __commonJS({
-  "node_modules/yaml/dist/parse/line-counter.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/parse/line-counter.js"(exports) {
     "use strict";
     var LineCounter = class {
       constructor() {
@@ -6340,9 +6340,9 @@ var require_line_counter = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/parse/parser.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/parse/parser.js
 var require_parser = __commonJS({
-  "node_modules/yaml/dist/parse/parser.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/parse/parser.js"(exports) {
     "use strict";
     var node_process = __require("process");
     var cst = require_cst();
@@ -7214,9 +7214,9 @@ var require_parser = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/public-api.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/public-api.js
 var require_public_api = __commonJS({
-  "node_modules/yaml/dist/public-api.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/public-api.js"(exports) {
     "use strict";
     var composer = require_composer();
     var Document = require_Document();
@@ -7311,9 +7311,9 @@ var require_public_api = __commonJS({
   }
 });
 
-// node_modules/yaml/dist/index.js
+// ../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/index.js
 var require_dist = __commonJS({
-  "node_modules/yaml/dist/index.js"(exports) {
+  "../../../../../.dsh/profiles/desktop/local-plugins/agnes-media/node_modules/yaml/dist/index.js"(exports) {
     "use strict";
     var composer = require_composer();
     var Document = require_Document();
@@ -7364,6 +7364,9 @@ var require_dist = __commonJS({
 });
 
 // src/host.ts
+import { readFileSync, readdirSync } from "node:fs";
+import { join as join5, resolve } from "node:path";
+import { homedir as homedir3 } from "node:os";
 import { defineTool } from "@deepseek-ai/dsh-tools";
 
 // src/config.ts
@@ -7386,8 +7389,17 @@ var DEFAULT_CONFIG = {
   storeDir: null,
   maxHistory: 60,
   autoInsert: true,
-  pageEnabled: true,
-  drawerEnabled: true
+  /*
+   * No defaults for the two entry toggles.
+   *
+   * `resolveConfig` always returns a complete object, and the Host feeds it to
+   * `PrefStore.applyPatch`, which treats every boolean it sees as an
+   * administrator's pin. A default of `true` here would therefore pin both
+   * entries on at every boot (and every `probe`) and silently undo what the user
+   * saved. Absent means "the stored preference decides".
+   */
+  pageEnabled: null,
+  drawerEnabled: null
 };
 function obj(v) {
   return typeof v === "object" && v !== null && !Array.isArray(v) ? v : {};
@@ -7445,9 +7457,11 @@ function resolveConfig(input) {
     keepDownloads: clampNum(raw.keepDownloads, DEFAULT_CONFIG.keepDownloads, 0, 1e4),
     storeDir: nullableStr(raw.storeDir),
     maxHistory: clampNum(raw.maxHistory, DEFAULT_CONFIG.maxHistory, 0, 500),
-    autoInsert: bool(raw.autoInsert, DEFAULT_CONFIG.autoInsert),
-    pageEnabled: bool(raw.pageEnabled, DEFAULT_CONFIG.pageEnabled),
-    drawerEnabled: bool(raw.drawerEnabled, DEFAULT_CONFIG.drawerEnabled)
+    autoInsert: bool(raw.autoInsert, DEFAULT_CONFIG.autoInsert === true),
+    // A boolean only when the patch (or the user's layer) actually said so;
+    // otherwise null, so the stored preference stays authoritative.
+    pageEnabled: typeof raw.pageEnabled === "boolean" ? raw.pageEnabled : DEFAULT_CONFIG.pageEnabled,
+    drawerEnabled: typeof raw.drawerEnabled === "boolean" ? raw.drawerEnabled : DEFAULT_CONFIG.drawerEnabled
   };
 }
 
@@ -7735,15 +7749,15 @@ function isRetryable(error, callerSignal) {
   return false;
 }
 function sleep(ms, signal) {
-  return new Promise((resolve) => {
+  return new Promise((resolve2) => {
     if (signal?.aborted === true) {
-      resolve();
+      resolve2();
       return;
     }
-    const t = setTimeout(resolve, ms);
+    const t = setTimeout(resolve2, ms);
     signal?.addEventListener("abort", () => {
       clearTimeout(t);
-      resolve();
+      resolve2();
     }, { once: true });
   });
 }
@@ -7896,15 +7910,15 @@ function progressOf(task) {
   return Math.min(100, Math.max(0, Math.round(raw)));
 }
 function sleep2(ms, signal) {
-  return new Promise((resolve) => {
+  return new Promise((resolve2) => {
     if (signal?.aborted === true) {
-      resolve();
+      resolve2();
       return;
     }
-    const t = setTimeout(resolve, ms);
+    const t = setTimeout(resolve2, ms);
     signal?.addEventListener("abort", () => {
       clearTimeout(t);
-      resolve();
+      resolve2();
     }, { once: true });
   });
 }
@@ -8012,6 +8026,20 @@ var JobStore = class {
   #max;
   #jobs = [];
   #loaded = false;
+  /** Reads already in flight; `settled()` awaits them. */
+  #loading = Promise.resolve();
+  /**
+   * Jobs added before the file finished loading.
+   *
+   * `load()` cannot run at activation — activation is synchronous and the read
+   * is not — so the Host starts it and carries on. A job created in that window
+   * would be wiped when the read lands and reassigns `#jobs`, which is exactly
+   * how a job could vanish a few milliseconds after `createImage` returned it.
+   * Those jobs are held here and merged in front of the loaded ones.
+   */
+  #addedDuringLoad = [];
+  /** True while `#read` is in flight, so `add` knows it must be merged. */
+  #reading = false;
   #writeChain = Promise.resolve();
   constructor(dir, max) {
     this.#path = join3(dir, "jobs.json");
@@ -8020,15 +8048,26 @@ var JobStore = class {
   get file() {
     return this.#path;
   }
+  /** Resolve once every read started so far has landed. */
+  async settled() {
+    await this.#loading;
+  }
   async load() {
     if (this.#loaded) return;
     this.#loaded = true;
+    const read = this.#read();
+    this.#loading = read;
+    await read;
+  }
+  async #read() {
+    this.#reading = true;
+    let restored = [];
     try {
       const text = await readFile2(this.#path, "utf8");
       const parsed = JSON.parse(text);
       if (Array.isArray(parsed?.jobs)) {
-        this.#jobs = parsed.jobs.filter(isJob);
-        for (const job of this.#jobs) {
+        restored = parsed.jobs.filter(isJob);
+        for (const job of restored) {
           if (RUNNING.has(job.status)) {
             job.status = "interrupted";
             job.phase = "error";
@@ -8037,8 +8076,13 @@ var JobStore = class {
         }
       }
     } catch {
-      this.#jobs = [];
+      restored = [];
     }
+    this.#reading = false;
+    const added = this.#addedDuringLoad;
+    this.#addedDuringLoad = [];
+    const addedIds = new Set(added.map((job) => job.id));
+    this.#jobs = [...added, ...restored.filter((job) => !addedIds.has(job.id))];
     this.#trim();
   }
   list() {
@@ -8072,6 +8116,7 @@ var JobStore = class {
       rateLimited: false
     };
     this.#jobs.unshift(job);
+    if (this.#reading) this.#addedDuringLoad.push(job);
     this.#trim();
     this.#persist();
     return job;
@@ -8136,16 +8181,33 @@ var DEFAULTS = { pageEnabled: true, drawerEnabled: true };
 var PrefStore = class {
   #path;
   #value = { ...DEFAULTS };
+  /** Reads already in flight; `settled()` awaits them. */
+  #pending = Promise.resolve();
   constructor(dir) {
     this.#path = join4(dir, "entries.json");
   }
-  async load() {
-    try {
-      const parsed = JSON.parse(await readFile3(this.#path, "utf8"));
-      if (typeof parsed?.pageEnabled === "boolean") this.#value.pageEnabled = parsed.pageEnabled;
-      if (typeof parsed?.drawerEnabled === "boolean") this.#value.drawerEnabled = parsed.drawerEnabled;
-    } catch {
-    }
+  load() {
+    const read = (async () => {
+      try {
+        const parsed = JSON.parse(await readFile3(this.#path, "utf8"));
+        if (typeof parsed?.pageEnabled === "boolean") this.#value.pageEnabled = parsed.pageEnabled;
+        if (typeof parsed?.drawerEnabled === "boolean") this.#value.drawerEnabled = parsed.drawerEnabled;
+      } catch {
+      }
+    })();
+    this.#pending = read;
+    return read;
+  }
+  /**
+   * Resolve once every read started so far has landed.
+   *
+   * `apply()` cannot await `load()` (activation is synchronous), so the stored
+   * value is not known at the moment the route handler starts serving. The
+   * entries endpoint awaits this first; otherwise the first answer after a
+   * restart is the compiled-in default instead of what the user chose.
+   */
+  async settled() {
+    await this.#pending;
   }
   get() {
     return { ...this.#value };
@@ -8153,8 +8215,10 @@ var PrefStore = class {
   /**
    * Merge a patch override into the stored value.
    *
-   * A patch that omits a key leaves the stored preference in force; a patch
-   * that sets it explicitly wins, so an administrator can pin an entry off.
+   * A patch that omits a key (or carries `null`) leaves the stored preference in
+   * force; a patch that sets a boolean wins, so an administrator can pin an
+   * entry. The resolved config always has both keys, so `null` — not "never
+   * pass the object" — is what "the user decides" looks like here.
    */
   applyPatch(patch) {
     if (typeof patch.pageEnabled === "boolean") this.#value.pageEnabled = patch.pageEnabled;
@@ -8203,6 +8267,7 @@ function applyInner(ctx, config = DEFAULT_CONFIG) {
   void prefs?.load();
   const credentials = readCredentials2(ctx);
   const storeKey = () => storeDir;
+  const profileDir = resolveProfileDir(storeDir);
   let credsPromise = null;
   const getCreds = () => {
     if (credsPromise === null) {
@@ -8576,8 +8641,10 @@ function applyInner(ctx, config = DEFAULT_CONFIG) {
         keySource: key.source,
         storeDir: storeKey() ?? "",
         version,
-        pageEnabled: prefs?.get().pageEnabled ?? cfg.pageEnabled,
-        drawerEnabled: prefs?.get().drawerEnabled ?? cfg.drawerEnabled
+        // A pinned value (patch) wins; otherwise the stored preference. `true`
+        // is the shipped default for an entry nothing has decided yet.
+        pageEnabled: cfg.pageEnabled ?? prefs?.get().pageEnabled ?? true,
+        drawerEnabled: cfg.drawerEnabled ?? prefs?.get().drawerEnabled ?? true
       };
     },
     jobs: jobsApi
@@ -8590,9 +8657,9 @@ function applyInner(ctx, config = DEFAULT_CONFIG) {
     store.update(job.id, error === null ? { status: "completed", phase: "done", progress: 100, urls: [...keptUrls], downloads: keptDownloads, error: null, finishedAt: Date.now() } : { status: "failed", phase: "error", progress: 100, urls: [...keptUrls], downloads: keptDownloads, error, finishedAt: Date.now() });
   };
   ctx.provide?.("agnesMedia", api);
-  registerTools(ctx, api, cfg, recordAgentJob);
-  registerHistoryTool(ctx, api);
-  registerBridge(ctx, api, { store, resumeJob, storeDir, prefs });
+  stage("agent tools", () => registerTools(ctx, api, cfg, recordAgentJob));
+  stage("history tool", () => registerHistoryTool(ctx, api));
+  stage("web-server bridge", () => registerBridge(ctx, api, { store, resumeJob, storeDir, prefs, profileDir }));
   ctx.on?.("dispose", () => {
     for (const controller of running.values()) controller.abort();
     running.clear();
@@ -8606,12 +8673,22 @@ function requireStore(store) {
   if (store === null) throw new Error("agnes-media: job store unavailable");
   return store;
 }
+function isService(value) {
+  return typeof value === "object" && value !== null || typeof value === "function";
+}
+function stage(label, run) {
+  try {
+    run();
+  } catch (error) {
+    console.error(`[agnes-media] ${label} failed; continuing without it:`, error);
+  }
+}
 function readCredentials2(ctx) {
   try {
     const svc = ctx.get?.("credentials");
     if (typeof svc !== "object" || svc === null) return void 0;
-    const resolve = svc.resolve;
-    if (typeof resolve !== "function") return void 0;
+    const resolve2 = svc.resolve;
+    if (typeof resolve2 !== "function") return void 0;
     return svc;
   } catch {
     return void 0;
@@ -8628,34 +8705,32 @@ function normalizeSeconds(raw) {
   return String(clamped);
 }
 function delay(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
+  return new Promise((resolve2) => {
+    setTimeout(resolve2, ms);
   });
 }
 function registerTools(ctx, api, cfg, recordAgentJob) {
   const tools = ctx.tools;
-  if (tools === void 0 || typeof tools.register !== "function") return;
+  if (!isService(tools) || typeof tools.register !== "function") {
+    console.warn("[agnes-media] ctx.tools unavailable; agent tools are not registered");
+    return;
+  }
   tools.register(defineTool({
     name: "agnes_media_image",
     description: "Generate images with Agnes Image (synchronous). Text-to-image, image-to-image and multi-image composition: pass `image` (public HTTPS URLs or data URIs) to edit or compose. Returns image URLs plus any local files.",
     parameters: {
-      type: "object",
-      properties: {
-        prompt: { type: "string", description: "Text instruction for image generation." },
-        model: { type: "string", description: `Image model (default ${cfg.imageModel}).` },
-        size: { type: "string", description: "Size tier: 1K | 2K | 3K | 4K." },
-        ratio: { type: "string", description: "Aspect ratio: 1:1, 3:4, 4:3, 16:9, 9:16, 2:3, 3:2, 21:9." },
-        n: { type: "number", description: "Number of images (1..4; 2.5-series always returns 1)." },
-        seed: { type: "number", description: "Random seed for reproducibility." },
-        negative_prompt: { type: "string", description: "Content to avoid." },
-        image: {
-          type: "array",
-          items: { type: "string" },
-          description: "Reference images for image-to-image / multi-image composition (max 5)."
-        }
-      },
-      required: ["prompt"],
-      additionalProperties: false
+      prompt: { type: "string", required: true, description: "Text instruction for image generation." },
+      model: { type: "string", description: `Image model (default ${cfg.imageModel}).` },
+      size: { type: "string", description: "Size tier: 1K | 2K | 3K | 4K." },
+      ratio: { type: "string", description: "Aspect ratio: 1:1, 3:4, 4:3, 16:9, 9:16, 2:3, 3:2, 21:9." },
+      n: { type: "number", description: "Number of images (1..4; 2.5-series always returns 1)." },
+      seed: { type: "number", description: "Random seed for reproducibility." },
+      negative_prompt: { type: "string", description: "Content to avoid." },
+      image: {
+        type: "array",
+        items: { type: "string" },
+        description: "Reference images for image-to-image / multi-image composition (max 5)."
+      }
     },
     output: {
       schema: { type: "string" },
@@ -8686,35 +8761,30 @@ function registerTools(ctx, api, cfg, recordAgentJob) {
     name: "agnes_media_video",
     description: "Generate a video with Agnes Video (asynchronous; polls until done). Modes: text (prompt only), keyframe (first_frame/last_frame public URLs), reference (images \u22645 and/or audios \u22643, addressed in the prompt as <Picture N>/<Audio N>). Use `from_image_prompt` for one-step image-to-video when no public asset URL exists.",
     parameters: {
-      type: "object",
-      properties: {
-        prompt: { type: "string", description: "Text description of the video content." },
-        model: { type: "string", description: `Video model (default ${cfg.videoModel}).` },
-        mode: { type: "string", enum: ["text", "keyframe", "reference"], description: "Generation mode (default text)." },
-        seconds: { type: "string", description: "Duration in seconds, 4\u201312 (default 5)." },
-        aspect_ratio: { type: "string", description: "Aspect ratio: 21:9, 16:9, 4:3, 1:1, 3:4, 9:16." },
-        first_frame: { type: "string", description: "keyframe mode: public URL of the first frame." },
-        last_frame: { type: "string", description: "keyframe mode: public URL of the last frame." },
-        images: {
-          type: "array",
-          items: { type: "string" },
-          description: "reference mode: up to 5 public image URLs."
-        },
-        audios: {
-          type: "array",
-          items: { type: "string" },
-          description: "reference mode: up to 3 public audio URLs."
-        },
-        from_image_prompt: {
-          type: "string",
-          description: "One-step image-to-video: generate this keyframe image first and use it as first_frame."
-        },
-        seed: { type: "number", description: "Random seed." },
-        negative_prompt: { type: "string", description: "Content to avoid." },
-        wait: { type: "boolean", description: "Block until completion (default true)." }
+      prompt: { type: "string", required: true, description: "Text description of the video content." },
+      model: { type: "string", description: `Video model (default ${cfg.videoModel}).` },
+      mode: { type: "string", enum: ["text", "keyframe", "reference"], description: "Generation mode (default text)." },
+      seconds: { type: "string", description: "Duration in seconds, 4\u201312 (default 5)." },
+      aspect_ratio: { type: "string", description: "Aspect ratio: 21:9, 16:9, 4:3, 1:1, 3:4, 9:16." },
+      first_frame: { type: "string", description: "keyframe mode: public URL of the first frame." },
+      last_frame: { type: "string", description: "keyframe mode: public URL of the last frame." },
+      images: {
+        type: "array",
+        items: { type: "string" },
+        description: "reference mode: up to 5 public image URLs."
       },
-      required: ["prompt"],
-      additionalProperties: false
+      audios: {
+        type: "array",
+        items: { type: "string" },
+        description: "reference mode: up to 3 public audio URLs."
+      },
+      from_image_prompt: {
+        type: "string",
+        description: "One-step image-to-video: generate this keyframe image first and use it as first_frame."
+      },
+      seed: { type: "number", description: "Random seed." },
+      negative_prompt: { type: "string", description: "Content to avoid." },
+      wait: { type: "boolean", description: "Block until completion (default true)." }
     },
     output: {
       schema: { type: "string" },
@@ -8753,13 +8823,8 @@ function registerTools(ctx, api, cfg, recordAgentJob) {
     name: "agnes_media_task",
     description: "Query the status of an Agnes video task by video id.",
     parameters: {
-      type: "object",
-      properties: {
-        video_id: { type: "string", description: "Video id returned by agnes_media_video." },
-        model: { type: "string", description: "Model used, to pick the right poll contract." }
-      },
-      required: ["video_id"],
-      additionalProperties: false
+      video_id: { required: true, type: "string", description: "Video id returned by agnes_media_video." },
+      model: { type: "string", description: "Model used, to pick the right poll contract." }
     },
     output: {
       schema: { type: "string" },
@@ -8777,7 +8842,8 @@ function registerTools(ctx, api, cfg, recordAgentJob) {
   tools.register(defineTool({
     name: "agnes_media_models",
     description: "List image and video models available on the configured Agnes gateway.",
-    parameters: { type: "object", properties: {}, additionalProperties: false },
+    // No parameters: the model list is whatever the gateway reports.
+    parameters: {},
     output: {
       schema: { type: "string" },
       render: (_args, value) => [{ type: "text", text: String(value) }]
@@ -8797,23 +8863,22 @@ function registerTools(ctx, api, cfg, recordAgentJob) {
 }
 function registerHistoryTool(ctx, api) {
   const tools = ctx.tools;
-  if (tools === void 0 || typeof tools.register !== "function") return;
+  if (!isService(tools) || typeof tools.register !== "function") {
+    console.warn("[agnes-media] ctx.tools unavailable; the history tool is not registered");
+    return;
+  }
   tools.register(defineTool({
     name: "agnes_media_history",
     description: "List media generated in the Agnes panel (and by earlier agent calls), newest first. Use it to reuse an existing result: read the prompt/model/params, then pass the URL to agnes_media_video as first_frame, or the prompt back into agnes_media_image.",
     parameters: {
-      type: "object",
-      properties: {
-        limit: { type: "number", description: "How many entries to return (default 10, max 50)." },
-        kind: { type: "string", enum: ["image", "video"], description: "Only this media kind." },
-        source: {
-          type: "string",
-          enum: ["panel", "agent"],
-          description: "Only jobs started from the panel, or only from tool calls."
-        },
-        promptContains: { type: "string", description: "Case-insensitive substring of the prompt." }
+      limit: { type: "number", description: "How many entries to return (default 10, max 50)." },
+      kind: { type: "string", enum: ["image", "video"], description: "Only this media kind." },
+      source: {
+        type: "string",
+        enum: ["panel", "agent"],
+        description: "Only jobs started from the panel, or only from tool calls."
       },
-      additionalProperties: false
+      promptContains: { type: "string", description: "Case-insensitive substring of the prompt." }
     },
     output: {
       schema: { type: "string" },
@@ -8879,14 +8944,84 @@ function describeDataUri(uri) {
   const approxBytes = Math.round((uri.length - uri.indexOf(",") - 1) * 0.75);
   return `${kind} ${approxBytes < 1024 * 1024 ? `${Math.round(approxBytes / 1024)}KB` : `${(approxBytes / (1024 * 1024)).toFixed(1)}MB`}`;
 }
+function resolveProfileDir(storeDir) {
+  if (typeof storeDir !== "string" || storeDir.length === 0) return void 0;
+  for (const home of [resolve(storeDir, "..", ".."), join5(homedir3(), ".dsh")]) {
+    const profiles = join5(home, "profiles");
+    let names;
+    try {
+      names = readdirSync(profiles);
+    } catch {
+      continue;
+    }
+    for (const name2 of names) {
+      const dir = join5(profiles, name2);
+      try {
+        const manifest = JSON.parse(readFileSync(join5(dir, "package.json"), "utf8"));
+        const deps = manifest.dependencies ?? {};
+        const bundles = Array.isArray(manifest.dsh?.profile?.bundles) ? manifest.dsh?.profile?.bundles : [];
+        if (Object.hasOwn(deps, "agnes-media") || bundles.includes("agnes-media")) return dir;
+      } catch {
+      }
+    }
+  }
+  return void 0;
+}
+function selectedBundles(options) {
+  const names = /* @__PURE__ */ new Set();
+  const dir = options.profileDir;
+  if (typeof dir === "string" && dir.length > 0) {
+    try {
+      const raw = readFileSync(join5(dir, "package.json"), "utf8");
+      const manifest = JSON.parse(raw);
+      const bundles = manifest.dsh?.profile?.bundles;
+      if (Array.isArray(bundles)) {
+        for (const name2 of bundles) if (typeof name2 === "string" && name2.length > 0) names.add(name2);
+      }
+    } catch (error) {
+      console.warn("[agnes-media] cannot read the profile bundle list:", error);
+    }
+  }
+  return [...names];
+}
 function registerBridge(ctx, api, options) {
-  const webServer = ctx.webServer;
-  if (webServer === void 0 || typeof webServer.register !== "function") return;
-  ctx.effect(() => webServer.register({
-    kind: "prefix",
-    path: API_PREFIX,
-    handler: (req, res) => void handleHttp(req, res, api, options)
-  }), "agnes-media: web-server bridge");
+  registerPrefixRoute(ctx, (webServer) => {
+    ctx.effect(() => webServer.register({
+      kind: "prefix",
+      path: API_PREFIX,
+      handler: (req, res) => void handleHttp(req, res, api, options)
+    }), "agnes-media: web-server bridge");
+  });
+}
+function registerPrefixRoute(ctx, mount) {
+  let mounted = false;
+  const tryMount = () => {
+    if (mounted) return true;
+    const webServer = ctx.webServer;
+    if (webServer === void 0 || !isService(webServer) || typeof webServer.register !== "function") return false;
+    mounted = true;
+    try {
+      mount(webServer);
+      console.info(`[agnes-media] web-server bridge mounted at ${API_PREFIX}`);
+    } catch (error) {
+      console.error("[agnes-media] mounting the web-server bridge failed:", error);
+    }
+    return true;
+  };
+  if (tryMount()) return;
+  let polls = 0;
+  const poll = () => {
+    if (tryMount()) return;
+    polls += 1;
+    if (polls >= 60) {
+      console.error("[agnes-media] no ctx.webServer after 30s; the panel cannot reach the Host");
+      return;
+    }
+    const timer = setTimeout(poll, 500);
+    ctx.effect(() => () => clearTimeout(timer), "agnes-media: web-server wait");
+  };
+  const initial = setTimeout(poll, 250);
+  ctx.effect(() => () => clearTimeout(initial), "agnes-media: web-server retry start");
 }
 async function handleHttp(req, res, api, options) {
   const method = req.method ?? "GET";
@@ -8922,13 +9057,13 @@ function sendJson(res, status, body) {
   res.end(text);
 }
 function readBody(req) {
-  return new Promise((resolve) => {
+  return new Promise((resolve2) => {
     let data = "";
     let size = 0;
     req.on("data", (chunk) => {
       size += String(chunk).length;
       if (size > 32 * 1024 * 1024) {
-        resolve({});
+        resolve2({});
         return;
       }
       data += String(chunk);
@@ -8936,9 +9071,9 @@ function readBody(req) {
     req.on("end", () => {
       try {
         const parsed = data.length > 0 ? JSON.parse(data) : {};
-        resolve(typeof parsed === "object" && parsed !== null && !Array.isArray(parsed) ? parsed : {});
+        resolve2(typeof parsed === "object" && parsed !== null && !Array.isArray(parsed) ? parsed : {});
       } catch {
-        resolve({});
+        resolve2({});
       }
     });
   });
@@ -8948,6 +9083,8 @@ async function dispatch(api, options, endpoint, payload, method) {
   switch (endpoint) {
     case "probe":
       return api.probe();
+    case "bundles":
+      return selectedBundles(options);
     case "generateImage":
       return api.generateImage({
         prompt: String(p.prompt ?? ""),
@@ -9033,6 +9170,7 @@ async function dispatch(api, options, endpoint, payload, method) {
     case "inlineReference":
       return api.jobs.inlineReference(String(p.id ?? ""));
     case "entries":
+      await options.prefs?.settled();
       return options.prefs?.get() ?? { pageEnabled: true, drawerEnabled: true };
     case "setEntries": {
       if (options.prefs === null) throw new Error("agnes-media: preferences unavailable");

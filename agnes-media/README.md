@@ -11,6 +11,7 @@ Agnes Media Studio —— DSH 的 AI 生图 / 生视频工作台（v2）。
 | 侧栏面板 | `sidebar.panellist` + `main` | 常驻工作台页面，与「插件」「定时任务」并列 |
 | 会话头按钮 | `conversation.session.header.utilities` | 在对话里一键拉起抽屉，不打断当前上下文 |
 | 浮层抽屉 | `shell.overlay` | 从右侧滑出，遮罩 + Esc 关闭；**完全不触碰输入框与发送按钮** |
+| 入口开关 | `plugins.bundle.config` | 「插件」页里 **Agnes Media Studio** 那一页的描述下方（key = 页面自己的包名 `agnes-media`）；同一组件也挂在伴生包页和行页（`<包名>#<行 id>`）上，这样「包含的组件」里那一行的配置按钮不会打开空白页 |
 
 三个入口渲染同一个 `Studio` 组件，因此永远不会各自跑偏。
 
@@ -68,14 +69,36 @@ Agnes Media Studio —— DSH 的 AI 生图 / 生视频工作台（v2）。
 | `storeDir` | `null` | 任务库目录，默认 `~/.dsh/agnes-media` |
 | `maxHistory` | `60` | 任务库保留条数 |
 | `autoInsert` | `true` | 有会话绑定时是否提供「发送到对话」 |
-| `pageEnabled` | `true` | 侧栏工作台入口的**初始**值（详情页开关会覆盖） |
-| `drawerEnabled` | `true` | 会话内抽屉入口的**初始**值（详情页开关会覆盖） |
+| `pageEnabled` | 不设 | 侧栏工作台入口的**钉死值**：不写 = 由详情页开关（`entries.json`）决定；写 `false` 可禁止用户打开 |
+| `drawerEnabled` | 不设 | 会话内抽屉入口的**钉死值**，规则同上 |
 
-两个入口开关在**插件详情页**（设置 → 插件 → Agnes Media Studio）里控制，
-写入 `~/.dsh/agnes-media/entries.json`，刷新和重启后保持。
+两个入口开关在**插件详情页**（「插件」页 → **Agnes Media Studio**）控制，写入
+`~/.dsh/agnes-media/entries.json`，刷新和重启后保持。
 
-`cordis.patch.yml` 里这两个值只是初始值；一旦用户在详情页动过开关，就以存储的
-偏好为准。patch 显式设为 `false` 时仍然优先（管理员可以钉死某个入口）。
+那一页就是本包自己的 bundle 页：`cordis.patch.yml` 把插件行作为一个 bundle 插入，
+profile 的 `dsh.profile.bundles` 也选中了 `agnes-media`，于是插件页给了它一个真正的
+`PackageDetail`（图标、描述、插件行）。开关挂在 `plugins.bundle.config` 上，key 用的
+就是**页面自己的包名** `agnes-media`；另外也覆盖了伴生包页和两个行页
+（`<包名>#<行 id>`），这样「包含的组件」里那个配置按钮不会打开空白页。
+
+> 踩过的坑（两次，都是同一个原因：没有读清楚 shell 的注册契约）：
+>
+> 1. `plugins.detail.section` 只有在「插件页自己拥有详情页主体」时才渲染；
+>    `sidebar.footer.action` 虽然能显示，却把插件设置放进了导航栏。
+> 2. **注册必须走 `slots.inject`，不能直接 `register`**。shell 对未声明的槽位
+>    直接抛 `slot "…" is not declared (a parent entry's children table must
+>    declare it)`，而 `plugins.bundle.config` 是「插件」页挂载时才声明的 ——
+>    比插件激活晚。直接 `register` 的异常被 `apply` 的兜底 catch 吞掉，页面照常
+>    渲染描述、插件行、来源信息，**唯独没有配置区，且一句日志都不打**。这就是
+>    「重启后开关不见了」。同一个错误也潜伏在抽屉的 `agnes-media.workspace` 上。
+>
+> 还有一条容易误判：重复注册同一个 keyed key **是抛错**，不是后者覆盖前者
+> （`keyed slot "…" already has an entry for key "…"`）。所以单元不会被「抢走」，
+> 只会「没注册上」。`tools/seat-probe.mjs` 用这套真实语义复现并守护它。
+
+`resolveConfig` 永远返回完整对象，而它会整个交给 `applyPatch`；所以这两个键的
+**默认值必须是 `null` 而不是 `true`** —— 否则每次启动都会把入口钉成开启，覆盖用户
+存下的关闭状态（这就是"关掉侧栏工作台后刷新，详情页整页消失"的原因）。
 
 关掉某个入口后，它对应的 slot 注册会被完全移除（不只是隐藏），不留 DOM 和监听器。
 **关掉抽屉后「发送到对话」仍然可用** —— 会话通道由那个 session 作用域的头部
@@ -98,9 +121,11 @@ src/
 │   ├── jobs.ts          # 原子写入的持久任务库
 │   └── prefs.ts         # 入口开关的持久化（详情页那两个开关）
 └── client/
-    ├── index.tsx        # 入口：四个席位 + 抽屉状态 + 开关同步
+    ├── index.tsx        # 入口：席位注册 + 抽屉状态 + 开关同步
     ├── studio.tsx       # 工作台 UI（页面与抽屉共用）
+    ├── seats.ts         # 入口开关挂在哪几个 bundle 页 + 注册契约
     ├── entries.tsx      # 插件详情页的入口开关
+    ├── entry-state.ts   # 两个开关的共享 store（同步通知，非轮询）
     ├── api.ts           # 宿主桥
     ├── upload.ts        # 本地图片 → data URI（缩放 / 格式 / 上限）
     ├── styles.ts        # 主题 token 样式
@@ -110,16 +135,14 @@ src/
 ## 开发
 
 ```bash
-npm install              # 拉取开发依赖（esbuild / typescript / react 等）
-npm run typecheck        # tsc --noEmit
-npm run build            # esbuild → lib/host.js + lib/client.js
-npm test                 # tools/verify.mjs（134 项）+ tools/upload-check.mjs（17 项）
+npm install
+npm run typecheck     # tsc --noEmit（stub 与真实 slot 契约一致，应零错误）
+npm run build         # esbuild → lib/host.js + lib/client.js
+npm test              # tools/verify.mjs + tools/upload-check.mjs
+node tools/seat-probe.mjs   # 用真实槽位语义复现「开关消失」
+node tools/route-probe.mjs  # 宿主 HTTP 桥（webServer 晚于插件就绪）
 node tools/live-check.mjs --key sk-...   # 真实网关联调（含视频出片）
 ```
-
-> `@deepseek-ai/cordis` 与 `@deepseek-ai/dsh-tools` 是 **peerDependencies**，
-> 由 DSH 宿主提供。开发时若要在仓库内直接跑测试，需让它们可解析
-> （例如 `npm install` 后手动链接宿主内的对应包）。
 
 ## 设计要点（踩过的坑）
 
@@ -129,6 +152,10 @@ node tools/live-check.mjs --key sk-...   # 真实网关联调（含视频出片�
 4. **`size` 只能是 `720P`**，`seconds` 4–12 字符串，`mode` 必填且与媒体字段互斥 —— 全部在**建任务前**校验，失败不产生费用。
 5. **不要把 API key 发给 CDN**：下载只对 `agnes-ai.cn` / `agnes-ai.com` 附带 `Authorization`。
 6. **任务状态归宿主所有**：客户端只轮询宿主，不做本地任务状态机，所以刷新/关面板不会丢进度。
+7. **`plugins.detail.section` 不是"插件自己的配置区"**：插件页只会为它拥有的主体（bundle 页 / 行页 / 官方插件页）渲染这个席位。由 `cordis.patch.yml` 直接 `insert` 的条目没有 bundle，注册在里面等于写进一个没人渲染的列表 —— 注册成功、页面上没有。插件要把设置放进「插件」页，就让它成为一个 bundle 的页面内容，配置挂 `plugins.bundle.config`；`sidebar.footer.action` 只适合导航类操作。**并且必须经 `slots.inject` 注册**：槽位在页面挂载时才声明，早于它的 `register` 会抛错并被吞掉（见上文「踩过的坑」）。
+8. **HTTP 桥必须等 `ctx.webServer`**：Web 服务在 profile 条目之后才就绪，加载时直接取 `ctx.webServer` 会拿到 `undefined` 并静默不注册 —— 面板上的开关于是变成「HTTP 404」且灰掉。`registerPrefixRoute` 会在服务缺失时轮询（上限 30s）再挂载。
+9. **宿主各阶段互不牵连**：`apply()` 原先整段一个 try/catch，`tools` 注册抛错（本机就有一个 schema 不兼容）会连带跳过存储、偏好和 HTTP 桥。现在每个阶段各自 `stage()`，失败只记一条日志。
+10. **查状态别信接口**：`/agnes-media-studio/api/*` 在浏览器里对每个请求回 404，旧版本命令行/脚本也同样被挡，所以验证只靠插槽检查与进程内 route-probe（`tools/route-probe.mjs`）。
 
 ## License
 
