@@ -17,30 +17,53 @@ const root = join(here, '..')
 const PLUGIN_ID = 'agnes-media'
 
 /**
- * Build with the in-memory result, rewriting the build location out of the
- * output before writing it.
+ * Name every bundled module's path by where it lives in the package.
  *
- * esbuild writes each bundled CommonJS module's path as a `//` comment and as
- * the wrapper's key. Relative to the working directory, those paths differ
- * with the *install location* — the same `src/` produced
- * `../../../local-plugins/agnes-media/...` from one checkout and
- * `../../../workspace/dsh-marketplace/agnes-media/...` from another — so every
- * rebuild rewrote 150+ lines of `lib/host.js` and showed up as a change even
- * though the code was identical. Naming them `extern:<module>` makes the
- * committed `lib/` reproducible from any directory.
+ * esbuild writes each module's path relative to the working directory, as a
+ * `//` comment and as the CJS wrapper key, so the output depended on where the
+ * package happened to sit: `../../../local-plugins/agnes-media/node_modules/…`
+ * from one checkout, `../../../workspace/dsh-marketplace/agnes-media/…` from
+ * another, `node_modules/…` when deps were local. Same `src/`, three different
+ * `lib/host.js`. Normalising to `extern:<module>` makes the committed bundle
+ * reproducible from any directory and keeps build-machine paths out of it.
  */
 function rewritePaths(text) {
   return text
-    .replace(/(?<=^\/\/ )\S+(node_modules\/\S+)$/gm, 'extern:$1')
-    .replace(/(?<=^ {2}")\S+(node_modules\/\S+)(?="\(exports\) \{)/gm, 'extern:$1')
+    // `// ../../x/node_modules/yaml/dist/visit.js` and `// node_modules/yaml/…`
+    .replace(/(?<=^\/\/ )(?:[^\n]*?\/)?(node_modules\/[^\n]+)$/gm, 'extern:$1')
+    // The same path as a CJS wrapper key: `  "../../x/node_modules/yaml/…"(exports) {`
+    .replace(/(?<=^ {2}")(?:[^"\n]*?\/)?(node_modules\/[^"\n]+)(?="\(exports\) \{)/gm, 'extern:$1')
+}
+
+/**
+ * The same normalisation for the sourcemap's `sources` list.
+ *
+ * A map is only useful to a debugger when its entries resolve, so entries are
+ * kept relative to the map's own directory — but the *install-location* part is
+ * dropped, leaving `node_modules/…` (or `../node_modules/…` for a nested map).
+ * Without this the `.map` still differed between checkouts even though the
+ * script no longer did.
+ */
+function rewriteSources(text) {
+  let map
+  try { map = JSON.parse(text) } catch { return text }
+  if (!Array.isArray(map.sources)) return text
+  map.sources = map.sources.map((source) => {
+    const at = source.lastIndexOf('node_modules/')
+    if (at < 0) return source
+    // Keep however many `../` the map needs to climb out, then anchor at the
+    // module name.
+    const depth = (source.slice(0, at).match(/\.\.\//g) ?? []).length
+    return `${'../'.repeat(depth)}${source.slice(at)}`
+  })
+  return JSON.stringify(map)
 }
 
 /** Run one esbuild bundle in memory and write the rewritten sources. */
 async function bundle(options, outfile) {
   const result = await build({ ...options, absWorkingDir: root, write: false })
   for (const out of result.outputFiles) {
-    const body = out.path.endsWith('.map') ? out.text : rewritePaths(out.text)
-    writeFileSync(out.path, body)
+    writeFileSync(out.path, out.path.endsWith('.map') ? rewriteSources(out.text) : rewritePaths(out.text))
   }
   return statSync(outfile)
 }
