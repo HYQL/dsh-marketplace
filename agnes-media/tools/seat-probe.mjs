@@ -198,7 +198,6 @@ check('activation before the page exists registers nothing', !pageWouldDraw(OWN)
 slots.declare('plugins.bundle.config')
 
 check(`switches mounted on the plugin's own page ("${OWN}")`, pageWouldDraw(OWN))
-check('switches also mounted on the companion page', pageWouldDraw('@local/agnes-media-bundle'))
 check('a row page is covered too',
   slots.entries('plugins.bundle.config').some((e) => e.options.key === `${OWN}#agnes-media-studio`))
 

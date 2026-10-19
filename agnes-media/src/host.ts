@@ -1003,14 +1003,13 @@ function resolveProfileDir(storeDir: string | null): string | undefined {
  * The bundle package names this profile selects.
  *
  * `plugins.bundle.config` is keyed by bundle package name, so the browser has
- * to know which ones exist to put its switches on the right page — and hard-
- * coding `@local/agnes-media-bundle` is why the section disappeared when the
- * profile pointed at a different bundle.
+ * to know which ones exist to put its switches on the right page — hard-coding
+ * one is how the section ended up keyed to a page that was not there.
  *
  * Read from the same manifest the Plugins page reads (`dsh.profile.bundles` in
- * the profile's `package.json`), plus the plugin's own package name when the
- * profile lists it as a bundle too. Best-effort: an unreadable manifest yields
- * an empty list, and the browser keeps its two fallback keys.
+ * the profile's `package.json`). Best-effort: an unreadable manifest yields an
+ * empty list, and the browser still keys the plugin's own page, which is the
+ * seat that matters.
  */
 function selectedBundles(options: BridgeOptions): string[] {
   const names = new Set<string>()

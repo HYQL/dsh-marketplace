@@ -1639,7 +1639,6 @@ function Row(props) {
 // src/client/seats.ts
 var OWN_BUNDLE = "agnes-media";
 var ROW_ID = "agnes-media-studio";
-var BUNDLE_KEY = "@local/agnes-media-bundle";
 var BUNDLE_SLOT = "plugins.bundle.config";
 function createSeats(options) {
   const { slots, keys, locale, registrant, render, log } = options;
@@ -1720,10 +1719,11 @@ function candidateKeys(bundles) {
   };
   add(OWN_BUNDLE);
   add(`${OWN_BUNDLE}#${ROW_ID}`);
-  add(BUNDLE_KEY);
-  add(`${BUNDLE_KEY}#${ROW_ID}`);
-  for (const name2 of bundles) add(name2);
-  for (const name2 of bundles) add(`${name2}#${ROW_ID}`);
+  for (const name2 of bundles) {
+    if (name2 === OWN_BUNDLE) continue;
+    add(name2);
+    add(`${name2}#${ROW_ID}`);
+  }
   return keys;
 }
 

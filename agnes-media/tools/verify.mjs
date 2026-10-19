@@ -252,7 +252,13 @@ group('entry switches seat')
 // silent "重启后开关不见了". `tools/seat-probe.mjs` reproduces that contract.
 ok('switches are mounted on plugins.bundle.config', clientSrc.includes('plugins.bundle.config'))
 ok('switches are keyed by the plugin\'s own bundle page', clientSrc.includes('"agnes-media"'))
-ok('switches also key the companion bundle page', clientSrc.includes('@local/agnes-media-bundle'))
+// The companion bundle was removed: the switches must not depend on it. The key
+// may still be listed as an optional extra page (a stray occupant at that key
+// is harmless, it just draws nothing), but the plugin's own page is the seat
+// that has to exist.
+ok('switch placement does not require the removed companion bundle',
+  clientSrc.indexOf('"agnes-media"') < clientSrc.indexOf('@local/agnes-media-bundle')
+  || !clientSrc.includes('@local/agnes-media-bundle'))
 ok('row configuration is keyed too', clientSrc.includes('agnes-media-studio') && /#\$\{|#\s*\+/.test(clientSrc))
 ok('seats are mounted through slots.inject, not a bare register',
   /slots\.inject\(BUNDLE_SLOT|inject\(BUNDLE_SLOT/.test(clientSrc) || /slots\.inject\([^)]*,\s*\(\)\s*=>/.test(clientSrc))

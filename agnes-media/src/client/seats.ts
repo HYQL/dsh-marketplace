@@ -51,14 +51,6 @@ export const OWN_BUNDLE = 'agnes-media'
 /** The row the plugin's patch inserts. */
 export const ROW_ID = 'agnes-media-studio'
 
-/**
- * The optional companion bundle.
- *
- * It exists only to give the plugin a second page whose configuration section
- * is its own. Its patch declares no rows, so it is a container and nothing else.
- */
-export const BUNDLE_KEY = '@local/agnes-media-bundle'
-
 const BUNDLE_SLOT = 'plugins.bundle.config'
 
 /**
@@ -218,14 +210,15 @@ export function candidateKeys(bundles: readonly string[]): string[] {
   add(OWN_BUNDLE)
   add(`${OWN_BUNDLE}#${ROW_ID}`)
 
-  // 1. The companion bundle's page, when installed.
-  add(BUNDLE_KEY)
-  add(`${BUNDLE_KEY}#${ROW_ID}`)
-
-  // 2. Anything else that depends on this plugin (a rename, or a wrapper
-  //    bundle). Naming it here is how the section survives that refactor.
-  for (const name of bundles) add(name)
-  for (const name of bundles) add(`${name}#${ROW_ID}`)
+  // 1. Any other bundle that depends on this plugin (a rename, or a wrapper
+  //    bundle). Naming it here is how the section survives that refactor; the
+  //    companion bundle this package used to ship is gone, and its page
+  //    disappears with it.
+  for (const name of bundles) {
+    if (name === OWN_BUNDLE) continue
+    add(name)
+    add(`${name}#${ROW_ID}`)
+  }
 
   return keys
 }

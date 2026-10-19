@@ -11,7 +11,7 @@ Agnes Media Studio —— DSH 的 AI 生图 / 生视频工作台（v2）。
 | 侧栏面板 | `sidebar.panellist` + `main` | 常驻工作台页面，与「插件」「定时任务」并列 |
 | 会话头按钮 | `conversation.session.header.utilities` | 在对话里一键拉起抽屉，不打断当前上下文 |
 | 浮层抽屉 | `shell.overlay` | 从右侧滑出，遮罩 + Esc 关闭；**完全不触碰输入框与发送按钮** |
-| 入口开关 | `plugins.bundle.config` | 「插件」页里 **Agnes Media Studio** 那一页的描述下方（key = 页面自己的包名 `agnes-media`）；同一组件也挂在伴生包页和行页（`<包名>#<行 id>`）上，这样「包含的组件」里那一行的配置按钮不会打开空白页 |
+| 入口开关 | `plugins.bundle.config` | 「插件」页里 **Agnes Media Studio** 那一页的描述下方（key = 页面自己的包名 `agnes-media`）；同一组件也挂在行页（`<包名>#<行 id>`）上，这样「包含的组件」里那一行的配置按钮不会打开空白页 |
 
 三个入口渲染同一个 `Studio` 组件，因此永远不会各自跑偏。
 
@@ -78,8 +78,12 @@ Agnes Media Studio —— DSH 的 AI 生图 / 生视频工作台（v2）。
 那一页就是本包自己的 bundle 页：`cordis.patch.yml` 把插件行作为一个 bundle 插入，
 profile 的 `dsh.profile.bundles` 也选中了 `agnes-media`，于是插件页给了它一个真正的
 `PackageDetail`（图标、描述、插件行）。开关挂在 `plugins.bundle.config` 上，key 用的
-就是**页面自己的包名** `agnes-media`；另外也覆盖了伴生包页和两个行页
-（`<包名>#<行 id>`），这样「包含的组件」里那个配置按钮不会打开空白页。
+就是**页面自己的包名** `agnes-media`；同时也覆盖行页（`<包名>#<行 id>`），这样
+「包含的组件」里那个配置按钮不会打开空白页。
+
+> 早期版本另外带了一个伴生组合包 `@local/agnes-media-bundle` 来"制造"一个页面。
+> 它没有任何行，只是多出一个空页面，开关也从不需要它，**已移除**：本包自己就是
+> bundle，页面本来就有。
 
 > 踩过的坑（两次，都是同一个原因：没有读清楚 shell 的注册契约）：
 >
